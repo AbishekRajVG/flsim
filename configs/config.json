@@ -1,7 +1,7 @@
 {
     "clients": {
-        "total": 50,
-        "per_round": 50,
+        "total": 2,
+        "per_round": 2,
         "label_distribution": "uniform",
         "do_test": false,
         "test_partition": 0.2,
@@ -23,7 +23,7 @@
         }
     },
     "federated_learning": {
-        "rounds": 100,
+        "rounds": 50,
         "target_accuracy": 0.95,
         "task": "train",
         "epochs": 5,
