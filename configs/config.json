@@ -23,7 +23,7 @@
         }
     },
     "federated_learning": {
-        "rounds": 50,
+        "rounds": 2,
         "target_accuracy": 0.95,
         "task": "train",
         "epochs": 5,

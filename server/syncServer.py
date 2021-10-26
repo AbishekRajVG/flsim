@@ -92,25 +92,25 @@ class SyncServer(Server):
         mem_size = 4096                                             # memory pool size in bytes
         memblock_key = 2338                                        # memory block key, need to keep the same in the ns-3 script
         exp = Experiment(mempool_key, mem_size, 'simple_fed_learning', '../ns-allinone-3.34/ns-3.34')      # Set up the ns-3 environment
-        try:
-            exp.reset()                                             # Reset the environment
-            rl = Ns3AIRL(memblock_key, Env, Act)                    # Link the shared memory block with ns-3 script
-            pro = exp.run(show_output=True)    # Set and run the ns-3 script (sim.cc)
-            while not rl.isFinish():
-                with rl as data:
-                    if data == None:
-                        break
-                    # AI algorithms here and put tconda activate fl-py37he data back to the action
-                    print("a " + str(data.env.datarate))
-                    print("b " + str(data.env.latency))
-                    data.act.c = 0
-                
-            pro.wait()                                              # Wait the ns-3 to stop
-        except Exception as e:
-            print('Something wrong')
-            print(e)
-        finally:
-            del exp
+        #try:
+        exp.reset()                                             # Reset the environment
+        rl = Ns3AIRL(memblock_key, Env, Act)                    # Link the shared memory block with ns-3 script
+        pro = exp.run(show_output=True)    # Set and run the ns-3 script (sim.cc)
+        #while not rl.isFinish():
+        #    with rl as data:
+        #        if data == None:
+        #            break
+                # AI algorithms here and put tconda activate fl-py37he data back to the action
+        #        print("a " + str(data.env.datarate))
+        #        print("b " + str(data.env.latency))
+        #        data.act.c = 0
+            
+        #pro.wait()                                              # Wait the ns-3 to stop
+        #except Exception as e:
+        #    print('Something wrong')
+        #    print(e)
+        #finally:
+        #del exp
         # Init self accuracy records
         self.records = Record()
 
@@ -126,7 +126,7 @@ class SyncServer(Server):
             logging.info('**** Round {}/{} ****'.format(round, rounds))
 
             # Run the sync federated learning round
-            accuracy, T_new = self.sync_round(round, T_old)
+            accuracy, T_new = self.sync_round(round, T_old, rl, pro)
             logging.info('Round finished at time {} s\n'.format(T_new))
 
             # Update time
@@ -141,8 +141,11 @@ class SyncServer(Server):
             with open(reports_path, 'wb') as f:
                 pickle.dump(self.saved_reports, f)
             logging.info('Saved reports: {}'.format(reports_path))
+        
+        pro.wait()
+        del exp
 
-    def sync_round(self, round, T_old):
+    def sync_round(self, round, T_old, rl, pro):
         import fl_model  # pylint: disable=import-error
 
         # Select clients to participate in the round
@@ -162,7 +165,18 @@ class SyncServer(Server):
         # Configure sample clients
         self.configuration(sample_clients)
         # Use the max delay in all sample clients as the delay in sync round
-        max_delay = max([c.delay for c in sample_clients])
+        #max_delay = max([c.delay for c in sample_clients])
+        #print(max_delay)
+        max_delay = 0.5
+        if not rl.isFinish():
+            with rl as data:
+                if data != None:
+                    # AI algorithms here and put tconda activate fl-py37he data back to the action
+                    print("a " + str(data.env.datarate))
+                    print("b " + str(data.env.latency))
+                    max_delay = data.env.latency
+                    data.act.c = 0
+        print(max_delay)
 
         # Run clients using multithreading for better parallelism
         threads = [Thread(target=client.run) for client in sample_clients]
