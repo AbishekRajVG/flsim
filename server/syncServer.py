@@ -9,24 +9,6 @@ from .record import Record, Profile
 from py_interface import *
 from ctypes import *
 
-# The environment (in this example, contain 'a' and 'b')
-# shared between ns-3 and python with the same shared memory
-# using the ns3-ai model.
-class Env(Structure):
-    _pack_ = 1
-    _fields_ = [
-        ('datarate', c_double),
-        ('latency', c_double),
-    ]
-
-# The result (in this example, contain 'c') calculated by python
-# and put back to ns-3 with the shared memory.
-class Act(Structure):
-    _pack_ = 1
-    _fields_ = [
-        ('c', c_double)
-    ]
-
 
 class Group(object):
     """Basic async group."""
@@ -89,7 +71,7 @@ class SyncServer(Server):
         target_accuracy = self.config.fl.target_accuracy
         reports_path = self.config.paths.reports
         
-        network = Network() #create ns3 network/start ns3 program
+        network = Network(self.config) #create ns3 network/start ns3 program
 
         # Init self accuracy records
         self.records = Record()
@@ -145,7 +127,10 @@ class SyncServer(Server):
         self.configuration(sample_clients)
 
         # Use the max delay in all sample clients as the delay in sync round
-        max_delay = network.access_network() #access latency from ns3 simulation
+        delays = []
+        for clients in sample_clients:
+            delays.append(network.access_network(clients.client_id))
+        max_delay = max(delays) #access latency from ns3 simulation
         print(max_delay)
 
         # Run clients using multithreading for better parallelism
