@@ -72,6 +72,8 @@ class SyncServer(Server):
         reports_path = self.config.paths.reports
         
         network = Network(self.config) #create ns3 network/start ns3 program
+        #dummy call to access
+
 
         # Init self accuracy records
         self.records = Record()
@@ -113,6 +115,7 @@ class SyncServer(Server):
         sample_groups = self.selection()
         sample_clients, throughput = [], []
         for group in sample_groups:
+            network.send_clients(group.clients)
             for client in group.clients:
                 client.set_delay()
                 sample_clients.append(client)
@@ -121,15 +124,19 @@ class SyncServer(Server):
             group.set_aggregate_time()
         self.throughput = sum([t for t in throughput])
 
+
+        #TODO send the sample clients to shared memory
+        #if round == 1:
+        #    network.access_network([sample_clients[0]], True)
+
         logging.info('Avg throughput {} kB/s'.format(self.throughput))
 
         # Configure sample clients
         self.configuration(sample_clients)
 
         # Use the max delay in all sample clients as the delay in sync round
-        delays = []
-        for clients in sample_clients:
-            delays.append(network.access_network(clients.client_id))
+        delays = network.access_network(sample_clients)
+        print(delays)
         max_delay = max(delays) #access latency from ns3 simulation
         print(max_delay)
 
