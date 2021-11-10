@@ -1,5 +1,9 @@
 from py_interface import *
 from ctypes import *
+import socket, struct
+
+TCP_IP = '127.0.0.1'
+TCP_PORT = 8080
 
 # Shared Memory Structure to represent
 # each client's data
@@ -16,7 +20,7 @@ class Client(Structure):
 class Server(Structure):
     _pack_ = 1
     _fields_ = [
-        ('c', c_int*4)
+        ('c', c_int*10)
     ]
 
 # Array structure to hold all 
@@ -24,7 +28,7 @@ class Server(Structure):
 class Clients(Structure):
     _pack_ = 1
     _fields_ = [
-        ('client', Client*4)
+        ('client', Client*10)
     ]
 
 
@@ -32,7 +36,7 @@ class Network(object):
     def __init__(self, config):
         mempool_key = 1234       # memory pool key, arbitrary integer large than 1000, needs to be changed each time memory size changes
         mem_size = 4096          # memory pool size in bytes
-        memblock_key = 2350     # memory block key, need to keep the same in the ns-3 script
+        memblock_key = 2370    # memory block key, need to keep the same in the ns-3 script
         self.config = config      
         self.num_clients = self.config.clients.total
         ns3settings = {'numClients': self.num_clients}     # Command line arguments for ns3
@@ -42,7 +46,7 @@ class Network(object):
         self.rl2 = Ns3AIRL(memblock_key+5, Clients, Server)
         self.pro = self.exp.run(setting=ns3settings,show_output=True)  
         self.config = config
-    
+
     def access_network(self, clients):
         latency = []
         if not self.rl.isFinish():
@@ -67,9 +71,43 @@ class Network(object):
                     #print("client id " + str(clients[i].client_id))
                     #print("i " + str(i))
                     #print("client to send" + str(clients[i].client_id))
+                    print(clients[i].client_id)
                     data.act.c[clients[i].client_id]= 1
 
 
+    def parse_clients(self, clients):
+        clients_to_send = [0 for _ in range(self.num_clients)]
+        for j in range(len(clients)):
+            clients_to_send[j] = 1
+        return clients_to_send
+
+
+    def connect(self):
+        self.s = socket.create_connection((TCP_IP,TCP_PORT,))
+    def sendRequest(self, *, requestType: int, array: list):
+        print("sending")
+        print(array)
+        message = struct.pack("II", requestType, len(array) )
+        self.s.send(message)
+        #for the total number of clients
+            # is the index in lit at client.id equal
+        for ele in array:
+            self.s.send(struct.pack("I", ele))
+
+        resp = self.s.recv(8)
+        print("resp")
+        print(resp)
+        if len(resp) < 8:
+            print(len(resp), resp)
+        command, nItems = struct.unpack("II", resp)
+        ret = []
+        for i in range(nItems):
+            dr = self.s.recv(8)
+            ret.append(struct.unpack("d", dr)[0])
+        return ret
+    def disconnect(self):
+        self.sendRequest(requestType=2, array=[])
+        self.s.close()
 
 
 

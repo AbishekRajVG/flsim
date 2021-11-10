@@ -2,6 +2,7 @@ import logging
 import pickle
 import random
 import math
+import time
 from threading import Thread
 from server import Server
 from network import Network
@@ -75,6 +76,7 @@ class SyncServer(Server):
         #dummy call to access
 
 
+
         # Init self accuracy records
         self.records = Record()
 
@@ -84,6 +86,8 @@ class SyncServer(Server):
         else:
             logging.info('Training: {} rounds\n'.format(rounds))
 
+        time.sleep(1);
+        network.connect();
         # Perform rounds of federated learning
         T_old = 0.0
         for round in range(1, rounds + 1):
@@ -112,10 +116,12 @@ class SyncServer(Server):
         import fl_model  # pylint: disable=import-error
 
         # Select clients to participate in the round
-        sample_groups = self.selection()
+        sample_groups = self.selection(network)
         sample_clients, throughput = [], []
+        delays = []
         for group in sample_groups:
-            network.send_clients(group.clients)
+            parsed_clients = network.parse_clients(group.clients)
+            delays = network.sendRequest(requestType=1, array=[0,0,0,0,0,0,0,1,1,1])
             for client in group.clients:
                 client.set_delay()
                 sample_clients.append(client)
@@ -135,7 +141,7 @@ class SyncServer(Server):
         self.configuration(sample_clients)
 
         # Use the max delay in all sample clients as the delay in sync round
-        delays = network.access_network(sample_clients)
+        #delays = network.access_network(sample_clients)
         print(delays)
         max_delay = max(delays) #access latency from ns3 simulation
         print(max_delay)
@@ -183,7 +189,7 @@ class SyncServer(Server):
         self.records.append_record(T_cur, accuracy, self.throughput)
         return self.records.get_latest_acc(), self.records.get_latest_t()
 
-    def selection(self):
+    def selection(self, network):
         # Select devices to participate in round
         clients_per_round = self.config.clients.per_round
 
@@ -191,7 +197,8 @@ class SyncServer(Server):
         sample_clients = [client for client in random.sample(
             self.clients, clients_per_round)]
 
-        # In sync case, create one group of all selected clients
+
+    # In sync case, create one group of all selected clients
         sample_groups = [Group([client for client in sample_clients])]
 
         return sample_groups
