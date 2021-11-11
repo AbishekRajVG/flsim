@@ -121,14 +121,20 @@ class SyncServer(Server):
         delays = []
         for group in sample_groups:
             parsed_clients = network.parse_clients(group.clients)
-            delays = network.sendRequest(requestType=1, array=[0,0,0,0,0,0,0,1,1,1])
+            simdata = network.sendRequest(requestType=1, array=parsed_clients)
+            delays = simdata["roundTime"]
+            # print(delays)
+            i = 0
             for client in group.clients:
-                client.set_delay()
+                client.delay = delays[i]  #only works right now if the training clients = all clients
                 sample_clients.append(client)
-                throughput.append(client.model_size / client.delay)
+                throughput.append(simdata["throughput"][i])
+                i = i + 1
             group.set_download_time(T_old)
             group.set_aggregate_time()
         self.throughput = sum([t for t in throughput])
+        print("throughputs")
+        print(throughput);
 
 
         #TODO send the sample clients to shared memory

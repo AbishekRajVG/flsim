@@ -100,10 +100,15 @@ class Network(object):
         if len(resp) < 8:
             print(len(resp), resp)
         command, nItems = struct.unpack("II", resp)
-        ret = []
+        ret = {
+            "roundTime": [],
+            "throughput": []
+        }
         for i in range(nItems):
-            dr = self.s.recv(8)
-            ret.append(struct.unpack("d", dr)[0])
+            dr = self.s.recv(8*2)
+            roundTime, throughput = struct.unpack("dd", dr)
+            ret["roundTime"].append(roundTime)
+            ret["throughput"].append(throughput)
         return ret
     def disconnect(self):
         self.sendRequest(requestType=2, array=[])
