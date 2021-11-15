@@ -40,40 +40,12 @@ class Network(object):
         self.config = config      
         self.num_clients = self.config.clients.total
         ns3settings = {'numClients': self.num_clients}     # Command line arguments for ns3
-        self.exp = Experiment(mempool_key, mem_size, 'wifi', '../ns-allinone-3.34/ns-3.34')      # Set up the ns-3 environment
+        self.exp = Experiment(mempool_key, mem_size, 'wifi_exp', '../ns-allinone-3.34/ns-3.34')      # Set up the ns-3 environment
         self.exp.reset()                                                                                        # Reset the environment
         self.rl = Ns3AIRL(memblock_key, Clients, Server)
         self.rl2 = Ns3AIRL(memblock_key+5, Clients, Server)
         self.pro = self.exp.run(setting=ns3settings,show_output=True)  
         self.config = config
-
-    def access_network(self, clients):
-        latency = []
-        if not self.rl.isFinish():
-            with self.rl as data:
-                for i in range(len(clients)):
-                    print(str(clients[i].client_id) + " client: " + str(data.env.client[clients[i].client_id].latency))
-                    latency.append(data.env.client[clients[i].client_id].latency) #access latency from ns3 simulations
-                    data.act.c[0] = 0
-                    print(latency)
-
-        return latency
-
-    def send_clients(self, clients):
-        arr = c_int * self.num_clients
-        a = arr(0,0,0) #reset arr from last transmission
-        if not self.rl2.isFinish():
-            with self.rl2 as data:
-                print("dummy " + str(data.env.client[0].latency))
-                print("dummy " + str(data.env.client[1].latency))
-                data.act.c = a
-                for i in range(len(clients)):
-                    #print("client id " + str(clients[i].client_id))
-                    #print("i " + str(i))
-                    #print("client to send" + str(clients[i].client_id))
-                    print(clients[i].client_id)
-                    data.act.c[clients[i].client_id]= 1
-
 
     def parse_clients(self, clients):
         clients_to_send = [0 for _ in range(self.num_clients)]
@@ -84,6 +56,7 @@ class Network(object):
 
     def connect(self):
         self.s = socket.create_connection((TCP_IP,TCP_PORT,))
+
     def sendRequest(self, *, requestType: int, array: list):
         print("sending")
         print(array)
@@ -110,11 +83,10 @@ class Network(object):
             ret["roundTime"].append(roundTime)
             ret["throughput"].append(throughput)
         return ret
+
     def disconnect(self):
         self.sendRequest(requestType=2, array=[])
         self.s.close()
-
-
 
     def destroy_network(self):
         #self.pro.wait()
