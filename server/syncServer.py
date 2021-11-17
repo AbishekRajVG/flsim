@@ -86,8 +86,8 @@ class SyncServer(Server):
         else:
             logging.info('Training: {} rounds\n'.format(rounds))
 
-        time.sleep(1);
-        network.connect();
+        time.sleep(1)
+        network.connect()
         # Perform rounds of federated learning
         T_old = 0.0
         for round in range(1, rounds + 1):

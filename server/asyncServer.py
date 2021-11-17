@@ -2,11 +2,13 @@ import logging
 import pickle
 import random
 import math
+import time
 from threading import Thread
 import torch
 from queue import PriorityQueue
 import os
 from server import Server
+from network import Network
 from .record import Record, Profile
 
 
@@ -89,6 +91,9 @@ class AsyncServer(Server):
         target_accuracy = self.config.fl.target_accuracy
         reports_path = self.config.paths.reports
 
+        network = Network(self.config) #create ns3 network/start ns3 program
+    #dummy call to access
+
         # Init async parameters
         self.alpha = self.config.sync.alpha
         self.staleness_func = self.config.sync.staleness_func
@@ -102,6 +107,8 @@ class AsyncServer(Server):
         else:
             logging.info('Training: {} rounds\n'.format(rounds))
 
+        time.sleep(1)
+        network.connect()
         # Perform rounds of federated learning
         T_old = 0.0
         for round in range(1, rounds + 1):
@@ -110,7 +117,7 @@ class AsyncServer(Server):
             # Perform async rounds of federated learning with certain
             # grouping strategy
             self.rm_old_models(self.config.paths.model, T_old)
-            accuracy, T_new = self.async_round(round, T_old)
+            accuracy, T_new = self.async_round(round, T_old, network)
 
             # Update time
             T_old = T_new
@@ -125,7 +132,7 @@ class AsyncServer(Server):
                 pickle.dump(self.saved_reports, f)
             logging.info('Saved reports: {}'.format(reports_path))
 
-    def async_round(self, round, T_old):
+    def async_round(self, round, T_old, network):
         """Run one async round for T_async"""
         import fl_model  # pylint: disable=import-error
         target_accuracy = self.config.fl.target_accuracy
@@ -134,7 +141,12 @@ class AsyncServer(Server):
         sample_groups = self.selection()
         sample_clients = []
         for group in sample_groups:
+            #parsed_clients = network.parse_clients(group.clients)
+            #simdata = network.sendAsyncRequest(requestType=5, array=parsed_clients)
+            print("group")
             for client in group.clients:
+                print(client.client_id)
+                #print(simdata["clientOrder"][client.client_id])
                 client.set_delay()
                 sample_clients.append(client)
             group.set_download_time(T_old)

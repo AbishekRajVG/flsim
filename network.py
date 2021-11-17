@@ -49,8 +49,8 @@ class Network(object):
 
     def parse_clients(self, clients):
         clients_to_send = [0 for _ in range(self.num_clients)]
-        for j in range(len(clients)):
-            clients_to_send[j] = 1
+        for client in clients:
+            clients_to_send[client.client_id] = 1
         return clients_to_send
 
 
@@ -83,6 +83,39 @@ class Network(object):
             ret["roundTime"].append(roundTime)
             ret["throughput"].append(throughput)
         return ret
+
+    def sendAsyncRequest(self, *, requestType: int, array: list):
+        print("sending")
+        print(array)
+        message = struct.pack("II", requestType, len(array) )
+        self.s.send(message)
+        #for the total number of clients
+        # is the index in lit at client.id equal
+        for ele in array:
+            self.s.send(struct.pack("I", ele))
+
+        resp = self.s.recv(8)
+        print("resp")
+        print(resp)
+        if len(resp) < 8:
+            print(len(resp), resp)
+        command, nItems = struct.unpack("II", resp)
+        ret = {
+            "clientOrder": {},
+            "roundTime": [],
+            "throughput": []
+        }
+        for i in range(nItems):
+            dr = self.s.recv(8*4)
+            clientOrder, clientId, roundTime, throughput = struct.unpack("QQdd", dr)
+            ret["clientOrder"][clientId] = clientOrder
+            ret["roundTime"].append(roundTime)
+            ret["throughput"].append(throughput)
+
+        print("hello")
+        print(ret["clientOrder"])
+        return ret
+
 
     def disconnect(self):
         self.sendRequest(requestType=2, array=[])
