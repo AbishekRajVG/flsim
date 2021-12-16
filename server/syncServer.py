@@ -13,6 +13,7 @@ from ctypes import *
 
 class Group(object):
     """Basic async group."""
+
     def __init__(self, client_list):
         self.clients = client_list
 
@@ -28,7 +29,7 @@ class Group(object):
         # Get average throughput contributed by this group
         assert (self.clients[0].model_size > 0), "Zero model size in group init!"
         self.throughput = len(self.clients) * self.clients[0].model_size / \
-                self.aggregate_time
+                          self.aggregate_time
 
     def __eq__(self, other):
         return self.aggregate_time == other.aggregate_time
@@ -47,6 +48,7 @@ class Group(object):
 
     def __ge__(self, other):
         return self.aggregate_time >= other.aggregate_time
+
 
 class SyncServer(Server):
     """Synchronous federated learning server."""
@@ -71,11 +73,9 @@ class SyncServer(Server):
         rounds = self.config.fl.rounds
         target_accuracy = self.config.fl.target_accuracy
         reports_path = self.config.paths.reports
-        
-        network = Network(self.config) #create ns3 network/start ns3 program
-        #dummy call to access
 
-
+        network = Network(self.config)  # create ns3 network/start ns3 program
+        # dummy call to access
 
         # Init self accuracy records
         self.records = Record()
@@ -109,7 +109,8 @@ class SyncServer(Server):
             with open(reports_path, 'wb') as f:
                 pickle.dump(self.saved_reports, f)
             logging.info('Saved reports: {}'.format(reports_path))
-        
+
+        network.disconnect()
         network.destroy_network()
 
     def sync_round(self, round, T_old, network):
@@ -122,23 +123,26 @@ class SyncServer(Server):
         for group in sample_groups:
             parsed_clients = network.parse_clients(group.clients)
             simdata = network.sendRequest(requestType=1, array=parsed_clients)
-            delays = simdata["roundTime"]
-            # print(delays)
-            i = 0
+            delays = []
             for client in group.clients:
-                client.delay = delays[i]  #only works right now if the training clients = all clients
+                if simdata[client.client_id]["roundTime"] < 0:
+                    client.delay = 0
+                    print("skip " + str(client.client_id))
+                    print("roundTime" + str(simdata[client.client_id]["roundTime"]))
+                    continue
+
+                client.delay = simdata[client.client_id]["roundTime"]
+                delays.append(simdata[client.client_id]["roundTime"])
                 sample_clients.append(client)
-                throughput.append(simdata["throughput"][i])
-                i = i + 1
+                throughput.append(simdata[client.client_id]["throughput"])
             group.set_download_time(T_old)
             group.set_aggregate_time()
-        self.throughput = sum([t for t in throughput])
+        self.throughput = sum([t for t in throughput])/len(throughput)
         print("throughputs")
-        print(throughput);
+        print(throughput)
 
-
-        #TODO send the sample clients to shared memory
-        #if round == 1:
+        # TODO send the sample clients to shared memory
+        # if round == 1:
         #    network.access_network([sample_clients[0]], True)
 
         logging.info('Avg throughput {} kB/s'.format(self.throughput))
@@ -147,9 +151,9 @@ class SyncServer(Server):
         self.configuration(sample_clients)
 
         # Use the max delay in all sample clients as the delay in sync round
-        #delays = network.access_network(sample_clients)
+        # delays = network.access_network(sample_clients)
         print(delays)
-        max_delay = max(delays) #access latency from ns3 simulation
+        max_delay = max(delays)  # access latency from ns3 simulation
         print(max_delay)
 
         # Run clients using multithreading for better parallelism
@@ -203,8 +207,7 @@ class SyncServer(Server):
         sample_clients = [client for client in random.sample(
             self.clients, clients_per_round)]
 
-
-    # In sync case, create one group of all selected clients
+        # In sync case, create one group of all selected clients
         sample_groups = [Group([client for client in sample_clients])]
 
         return sample_groups
