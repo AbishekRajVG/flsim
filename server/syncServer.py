@@ -111,7 +111,6 @@ class SyncServer(Server):
             logging.info('Saved reports: {}'.format(reports_path))
 
         network.disconnect()
-        network.destroy_network()
 
     def sync_round(self, round, T_old, network):
         import fl_model  # pylint: disable=import-error

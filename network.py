@@ -1,55 +1,45 @@
-from py_interface import *
+#from py_interface import *
 from ctypes import *
-import socket, struct
+import socket
+import struct
+import subprocess
 
 TCP_IP = '127.0.0.1'
 TCP_PORT = 8080
-
-
-# Shared Memory Structure to represent
-# each client's data
-# Need to rename
-class Client(Structure):
-    _pack_ = 1
-    _fields_ = [
-        ('latency', c_double)
-    ]
-
-
-# Shared memory structure to represent
-# some result that needs to be communicated 
-# back to ns3 (currently none)
-class Server(Structure):
-    _pack_ = 1
-    _fields_ = [
-        ('c', c_int * 10)
-    ]
-
-
-# Array structure to hold all
-# client's data in simulation
-class Clients(Structure):
-    _pack_ = 1
-    _fields_ = [
-        ('client', Client * 10)
-    ]
-
+PATH='../ns-allinone-3.34/ns-3.34'
+PROGRAM='wifi_exp'
 
 class Network(object):
     def __init__(self, config):
-        mempool_key = 1234  # memory pool key, arbitrary integer large than 1000, needs to be changed each time memory size changes
-        mem_size = 4096  # memory pool size in bytes
-        memblock_key = 2370  # memory block key, need to keep the same in the ns-3 script
         self.config = config
         self.num_clients = self.config.clients.total
-        ns3settings = {'numClients': self.num_clients}  # Command line arguments for ns3
-        self.exp = Experiment(mempool_key, mem_size, 'wifi_exp',
-                              '../ns-allinone-3.34/ns-3.34')  # Set up the ns-3 environment
-        self.exp.reset()  # Reset the environment
-        self.rl = Ns3AIRL(memblock_key, Clients, Server)
-        self.rl2 = Ns3AIRL(memblock_key + 5, Clients, Server)
-        self.pro = self.exp.run(setting=ns3settings, show_output=True)
-        self.config = config
+        self.network_type = self.config.network.type
+
+        proc = subprocess.Popen('./waf build', shell=True, stdout=subprocess.PIPE,
+                                universal_newlines=True, cwd=PATH)
+        proc.wait()
+        if proc.returncode != 0:
+            exit(-1)
+
+        command = './waf --run "' + PROGRAM + ' --NumClients=' + str(self.num_clients) + ' --NetworkType=' + self.network_type
+        command += ' --ModelSize=' + str(self.config.model.size)
+        '''print(self.config.network)
+        for net in self.config.network:
+            if net == self.network_type:
+                print(net.items())'''
+
+        if self.network_type == 'wifi':
+            command += ' --TxGain=' + str(self.config.network.wifi['tx_gain'])
+            command += ' --MaxPacketSize=' + str(self.config.network.wifi['max_packet_size'])
+        else: # else assume ethernet
+            command += ' --MaxPacketSize=' + str(self.config.network.wifi['max_packet_size'])
+
+        command += '"'
+        print(command)
+
+        proc = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE,
+                                universal_newlines=True, cwd=PATH)
+
 
     def parse_clients(self, clients):
         clients_to_send = [0 for _ in range(self.num_clients)]
@@ -120,6 +110,3 @@ class Network(object):
         # self.sendRequest(requestType=2, array=[])
         self.s.close()
 
-    def destroy_network(self):
-        # self.pro.wait()
-        del self.exp

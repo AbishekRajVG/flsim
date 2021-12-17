@@ -50,7 +50,11 @@ class Config(object):
         self.fl = namedtuple('fl', fields)(*params)
 
         # -- Model --
-        self.model = config['model']
+        fields = ['name', 'size']
+        defaults = ('MNIST', 1600)
+        params = [config['model'].get(field, defaults[i])
+                  for i, field in enumerate(fields)]
+        self.model = namedtuple('model', fields)(*params)
 
         # -- Paths --
         fields = ['data', 'model', 'reports', 'plot']
@@ -58,7 +62,7 @@ class Config(object):
         params = [config['paths'].get(field, defaults[i])
                   for i, field in enumerate(fields)]
         # Set specific model path
-        params[fields.index('model')] += '/' + self.model
+        params[fields.index('model')] += '/' + self.model.name
 
         self.paths = namedtuple('paths', fields)(*params)
 
@@ -78,6 +82,13 @@ class Config(object):
         params = [config['link_speed'].get(field, defaults[i])
                   for i, field in enumerate(fields)]
         self.link = namedtuple('link_speed', fields)(*params)
+
+        # -- Network Settings --
+        fields = ['type', 'wifi', "ethernet"]
+        defaults = ("wifi", None, None)
+        params = [config['network'].get(field, defaults[i])
+                  for i, field in enumerate(fields)]
+        self.network = namedtuple('network', fields)(*params)
 
         # -- Plot interval --
         self.plot_interval = config['plot_interval']

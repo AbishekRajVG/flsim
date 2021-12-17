@@ -67,12 +67,12 @@ class Client(object):
         self.speed_std = config.link.std
 
         # Set model size
-        model_path = config.paths.model + '/global'
+        '''model_path = config.paths.model + '/global'
         if os.path.exists(model_path):
             self.model_size = os.path.getsize(model_path) / 1e3  # model size in Kbytes
         else:
-            self.model_size = 1600  # estimated model size in Kbytes
-
+            self.model_size = 1600  # estimated model size in Kbytes'''
+        self.model_size = config.model.size
         # Set estimated delay
         self.est_delay = self.model_size / self.speed_mean
 
