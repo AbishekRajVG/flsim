@@ -7,7 +7,6 @@ from threading import Thread
 from server import Server
 from network import Network
 from .record import Record, Profile
-from py_interface import *
 from ctypes import *
 
 
@@ -119,13 +118,14 @@ class SyncServer(Server):
         sample_groups = self.selection(network)
         sample_clients, throughput = [], []
         delays = []
+        dropouts = 0
         for group in sample_groups:
             parsed_clients = network.parse_clients(group.clients)
             simdata = network.sendRequest(requestType=1, array=parsed_clients)
-            delays = []
             for client in group.clients:
                 if simdata[client.client_id]["roundTime"] < 0:
                     client.delay = 0
+                    dropouts = dropouts + 1
                     print("skip " + str(client.client_id))
                     print("roundTime" + str(simdata[client.client_id]["roundTime"]))
                     continue
@@ -139,10 +139,7 @@ class SyncServer(Server):
         self.throughput = sum([t for t in throughput])/len(throughput)
         print("throughputs")
         print(throughput)
-
-        # TODO send the sample clients to shared memory
-        # if round == 1:
-        #    network.access_network([sample_clients[0]], True)
+        print("dropouts: " + str(dropouts))
 
         logging.info('Avg throughput {} kB/s'.format(self.throughput))
 
@@ -195,7 +192,7 @@ class SyncServer(Server):
             accuracy = fl_model.test(self.model, testloader)
 
         logging.info('Average accuracy: {:.2f}%'.format(100 * accuracy))
-        self.records.append_record(T_cur, accuracy, self.throughput)
+        self.records.append_record(T_cur, accuracy, self.throughput, dropouts, round)
         return self.records.get_latest_acc(), self.records.get_latest_t()
 
     def selection(self, network):

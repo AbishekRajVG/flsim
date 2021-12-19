@@ -10,12 +10,16 @@ class Record(object):
         self.t = []
         self.acc = []
         self.throughput = []
+        self.dropout = []
+        self.round = []
         self.alpha = 0.1
         self.last_acc = 0
 
-    def append_record(self, t, acc, throughput):
+    def append_record(self, t, acc, throughput, dropout, round_num):
         self.t.append(t)
         self.throughput.append(throughput)
+        self.dropout.append(dropout)
+        self.round.append(round_num)
         if len(self.acc) == 0:
             self.acc.append(acc)
         else:
@@ -44,7 +48,7 @@ class Record(object):
         throughput = np.expand_dims(np.array(self.throughput), axis=1)
         rows = np.concatenate((t, acc, throughput), axis=1).tolist()
 
-        fields = ['time', 'acc', 'throughput']
+        fields = ['round', 'time', 'acc', 'throughput', 'dropout']
         with open(filename, 'w') as f:
             write = csv.writer(f)
             write.writerow(fields)
@@ -56,17 +60,22 @@ class Record(object):
             "Length of time and acc records do not match!"
 
         fig = plt.figure(figsize=(6, 8))
-        plt.subplot(211)
+        plt.subplot(311)
         plt.plot(self.t, self.acc, label='global acc')
         plt.xlabel('Time (s)')
         plt.ylabel('Accuracy (%)')
         plt.legend()
 
-        plt.subplot(212)
+        plt.subplot(312)
         plt.plot(self.t, self.throughput, label='throughput')
         plt.xlabel('Time (s)')
         plt.ylabel('Throughput (kB/s)')
         plt.legend()
+
+        plt.subplot(313)
+        plt.bar(self.round, self.dropout)
+        plt.xlabel('Round')
+        plt.ylabel('Client drop out')
         plt.savefig(figname)
         plt.close(fig)
 
