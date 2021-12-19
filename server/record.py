@@ -59,7 +59,7 @@ class Record(object):
         assert (len(self.t) == len(self.acc)), \
             "Length of time and acc records do not match!"
 
-        fig = plt.figure(figsize=(6, 8))
+        fig = plt.figure(figsize=(8, 10))
         plt.subplot(311)
         plt.plot(self.t, self.acc, label='global acc')
         plt.xlabel('Time (s)')
