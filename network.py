@@ -32,7 +32,7 @@ class Network(object):
             command += ' --TxGain=' + str(self.config.network.wifi['tx_gain'])
             command += ' --MaxPacketSize=' + str(self.config.network.wifi['max_packet_size'])
         else: # else assume ethernet
-            command += ' --MaxPacketSize=' + str(self.config.network.wifi['max_packet_size'])
+            command += ' --MaxPacketSize=' + str(self.config.network.ethernet['max_packet_size'])
 
         command += '"'
         print(command)

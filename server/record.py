@@ -42,11 +42,17 @@ class Record(object):
             "Length of time and throughput records do not match! t {} throughput {}".format(
                 len(self.t), len(self.throughput)
             )
-
+        assert (len(self.dropout) == len(self.round)), \
+            "Length of dropouts and rounds records do not match! t {} acc {}".format(
+                len(self.dropout), len(self.round)
+            )
+        rounds = np.expand_dims(np.array(self.round), axis=1)
         t = np.expand_dims(np.array(self.t), axis=1)
         acc = np.expand_dims(np.array(self.acc), axis=1)
         throughput = np.expand_dims(np.array(self.throughput), axis=1)
-        rows = np.concatenate((t, acc, throughput), axis=1).tolist()
+        dropouts = np.expand_dims(np.array(self.dropout), axis=1)
+
+        rows = np.concatenate((rounds, t, acc, throughput, dropouts), axis=1).tolist()
 
         fields = ['round', 'time', 'acc', 'throughput', 'dropout']
         with open(filename, 'w') as f:

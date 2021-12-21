@@ -47,11 +47,15 @@ def main():
     # Save and plot accuracy-time curve
     if fl_config.server == "sync" or fl_config.server == "async":
         d_str = datetime.now().strftime("%m-%d-%H-%M-%S")
-        fl_server.records.save_record('{}_{}.csv'.format(
-            fl_config.server, d_str
+        network_type = fl_config.network.type
+        total_clients = str(fl_config.clients.total)
+        per_round = str(fl_config.clients.per_round)
+
+        fl_server.records.save_record('{}_{}_{}_{}outOf{}.csv'.format(
+            fl_config.server, d_str, network_type, per_round, total_clients
         ))
-        fl_server.records.plot_record('{}_{}.png'.format(
-            fl_config.server, d_str
+        fl_server.records.plot_record('{}_{}_{}_{}outOf{}.png'.format(
+            fl_config.server, d_str, network_type, per_round, total_clients
         ))
 
     # Delete global model
