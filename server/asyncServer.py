@@ -4,9 +4,11 @@ import random
 import math
 from threading import Thread
 import torch
+import time
 from queue import PriorityQueue
 import os
 from server import Server
+from network import Network
 from .record import Record, Profile
 
 
@@ -93,6 +95,9 @@ class AsyncServer(Server):
         self.alpha = self.config.sync.alpha
         self.staleness_func = self.config.sync.staleness_func
 
+        network = Network(self.config)  # create ns3 network/start ns3 program
+        # dummy call to access
+
         # Init self accuracy records
         self.records = Record()
 
@@ -104,13 +109,18 @@ class AsyncServer(Server):
 
         # Perform rounds of federated learning
         T_old = 0.0
+
+        #connect to network
+        time.sleep(1)
+        network.connect()
+
         for round in range(1, rounds + 1):
             logging.info('**** Round {}/{} ****'.format(round, rounds))
 
             # Perform async rounds of federated learning with certain
             # grouping strategy
             self.rm_old_models(self.config.paths.model, T_old)
-            accuracy, T_new = self.async_round(round, T_old)
+            accuracy, T_new = self.async_round(round, T_old, network)
 
             # Update time
             T_old = T_new
@@ -125,98 +135,96 @@ class AsyncServer(Server):
                 pickle.dump(self.saved_reports, f)
             logging.info('Saved reports: {}'.format(reports_path))
 
-    def async_round(self, round, T_old):
+    def async_round(self, round, T_old, network):
         """Run one async round for T_async"""
         import fl_model  # pylint: disable=import-error
         target_accuracy = self.config.fl.target_accuracy
 
         # Select clients to participate in the round
-        sample_groups = self.selection()
-        sample_clients = []
-        for group in sample_groups:
-            for client in group.clients:
-                client.set_delay()
-                sample_clients.append(client)
-            group.set_download_time(T_old)
-            group.set_aggregate_time()
-        self.throughput = sum([g.throughput for g in sample_groups])
+        sample_clients = self.selection()
 
-        # Put the group into a queue according to its delay in ascending order
-        # Each selected client will complete one local update in this async round
-        queue = PriorityQueue()
-        # This async round will end after the slowest group completes one round
-        last_aggregate_time = max([g.aggregate_time for g in sample_groups])
+        # Send selected clients to ns-3
+        parsed_clients = network.parse_clients(sample_clients)
+        network.sendAsyncRequest(requestType=1, array=parsed_clients)
+
+        id_to_client = {}
+        for client in sample_clients:
+            id_to_client[client.client_id] = (client, T_old)
+
+        T_new = T_old
+        throughputs = []
+        # Start the asynchronous updates
+        while True:
+            simdata = network.readAsyncResponse()
+
+            if simdata != 'end':
+                #get the client/group based on the id, use map
+                client_id = -1
+                for key in simdata:
+                    client_id = key
+
+                select_client = id_to_client[client_id][0]
+                select_client.delay = simdata[client_id]["endTime"] - simdata[client_id]["startTime"]
+                T_client = id_to_client[client_id][1]
+                throughputs.append(simdata[client_id]["throughput"])
+
+                self.async_configuration([select_client], T_client)
+                select_client.run(reg=True)
+                T_cur = T_client + select_client.delay
+                T_new = T_cur
+
+                logging.info('Training finished on clients {} at time {} s'.format(
+                    select_client, T_cur
+                ))
+
+                # Receive client updates
+                reports = self.reporting([select_client])
+
+                # Update profile and plot
+                self.update_profile(reports)
+
+                # Perform weight aggregation
+                logging.info('Aggregating updates from clients {}'.format(select_client))
+                staleness = select_client.delay
+                updated_weights = self.aggregation(reports, staleness)
+
+                # Load updated weights
+                fl_model.load_weights(self.model, updated_weights)
+
+                # Extract flattened weights (if applicable)
+                if self.config.paths.reports:
+                    self.save_reports(round, reports)
+
+                # Save updated global model
+                self.async_save_model(self.model, self.config.paths.model, T_cur)
+
+                # Test global model accuracy
+                if self.config.clients.do_test:  # Get average accuracy from client reports
+                    accuracy = self.accuracy_averaging(reports)
+                else:  # Test updated model on server
+                    testset = self.loader.get_testset()
+                    batch_size = self.config.fl.batch_size
+                    testloader = fl_model.get_testloader(testset, batch_size)
+                    accuracy = fl_model.test(self.model, testloader)
+
+                self.throughput = 0
+                if len(throughputs) > 0:
+                    self.throughput = sum([t for t in throughputs])/len(throughputs)
+                logging.info('Average accuracy: {:.2f}%\n'.format(100 * accuracy))
+                self.records.append_record(T_cur, accuracy, self.throughput, 0, round)
+
+            # Return when target accuracy is met
+                if target_accuracy and \
+                        (self.records.get_latest_acc() >= target_accuracy):
+                    logging.info('Target accuracy reached.')
+                    break
+            elif simdata == 'end':
+                break
+
 
         logging.info('Round lasts {} secs, avg throughput {} kB/s'.format(
-            last_aggregate_time, self.throughput
+            T_new, self.throughput
         ))
-
-        for group in sample_groups:
-            queue.put(group)
-
-        # Start the asynchronous updates
-        while not queue.empty():
-            select_group = queue.get()
-            select_clients = select_group.clients
-            self.async_configuration(select_clients, select_group.download_time)
-
-            threads = [Thread(target=client.run(reg=True)) for client in select_clients]
-            [t.start() for t in threads]
-            [t.join() for t in threads]
-            T_cur = select_group.aggregate_time  # Update current time
-            logging.info('Training finished on clients {} at time {} s'.format(
-                select_clients, T_cur
-            ))
-
-            # Receive client updates
-            reports = self.reporting(select_clients)
-
-            # Update profile and plot
-            self.update_profile(reports)
-            # Plot every plot_interval
-            if math.floor(T_cur / self.config.plot_interval) > \
-                    math.floor(T_old / self.config.plot_interval):
-                self.profile.plot(T_cur, self.config.paths.plot)
-
-            # Perform weight aggregation
-            logging.info('Aggregating updates from clients {}'.format(select_clients))
-            staleness = select_group.aggregate_time - select_group.download_time
-            updated_weights = self.aggregation(reports, staleness)
-
-            # Load updated weights
-            fl_model.load_weights(self.model, updated_weights)
-
-            # Extract flattened weights (if applicable)
-            if self.config.paths.reports:
-                self.save_reports(round, reports)
-
-            # Save updated global model
-            self.async_save_model(self.model, self.config.paths.model, T_cur)
-
-            # Test global model accuracy
-            if self.config.clients.do_test:  # Get average accuracy from client reports
-                accuracy = self.accuracy_averaging(reports)
-            else:  # Test updated model on server
-                testset = self.loader.get_testset()
-                batch_size = self.config.fl.batch_size
-                testloader = fl_model.get_testloader(testset, batch_size)
-                accuracy = fl_model.test(self.model, testloader)
-
-            logging.info('Average accuracy: {:.2f}%\n'.format(100 * accuracy))
-            self.records.append_record(T_cur, accuracy, self.throughput, 0, round)
-            # Return when target accuracy is met
-            if target_accuracy and \
-                    (self.records.get_latest_acc() >= target_accuracy):
-                logging.info('Target accuracy reached.')
-                return self.records.get_latest_acc(), self.records.get_latest_t()
-
-            # Insert the next aggregation of the group into queue
-            # if time permitted
-            if T_cur + select_group.delay < last_aggregate_time:
-                select_group.set_download_time(T_cur)
-                select_group.set_aggregate_time()
-                queue.put(select_group)
-
         return self.records.get_latest_acc(), self.records.get_latest_t()
 
 
@@ -255,9 +263,9 @@ class AsyncServer(Server):
             print(sample_clients)
 
         # Create one group for each selected client to perform async updates
-        sample_groups = [Group([client]) for client in sample_clients]
+        #sample_groups = [Group([client]) for client in sample_clients]
 
-        return sample_groups
+        return sample_clients
 
     def async_configuration(self, sample_clients, download_time):
         loader_type = self.config.loader

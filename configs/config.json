@@ -1,7 +1,7 @@
 {
     "clients": {
         "total": 20,
-        "per_round": 15,
+        "per_round": 20,
         "label_distribution": "uniform",
         "do_test": false,
         "test_partition": 0.2,
@@ -23,15 +23,15 @@
         }
     },
     "federated_learning": {
-        "rounds": 100,
-        "target_accuracy": 0.80,
+        "rounds": 50,
+        "target_accuracy": 0.95,
         "task": "train",
         "epochs": 5,
         "batch_size": 100
     },
     "model": {
         "name": "MNIST",
-        "size": 1.6
+        "size": 1600
     },
     "paths": {
         "data": "./data",
@@ -39,7 +39,7 @@
         "reports": "reports.pkl",
         "plot": "./plots"
     },
-    "server": "sync",
+    "server": "async",
     "async": {
         "alpha": 0.9,
         "staleness_func": "polynomial"
@@ -50,7 +50,7 @@
         "std": 0
     },
     "network": {
-        "type": "wifi",
+        "type": "ethernet",
         "wifi": {
             "tx_gain": 0,
             "max_packet_size": 1024

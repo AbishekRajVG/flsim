@@ -34,6 +34,8 @@ class Network(object):
         else: # else assume ethernet
             command += ' --MaxPacketSize=' + str(self.config.network.ethernet['max_packet_size'])
 
+        command += " --LearningModel=" + str(self.config.server)
+
         command += '"'
         print(command)
 
@@ -77,34 +79,33 @@ class Network(object):
     def sendAsyncRequest(self, *, requestType: int, array: list):
         print("sending")
         print(array)
-        message = struct.pack("II", requestType, len(array))
+        message = struct.pack("II", 1, len(array))
         self.s.send(message)
         # for the total number of clients
         # is the index in lit at client.id equal
         for ele in array:
             self.s.send(struct.pack("I", ele))
 
+    def readAsyncResponse(self):
         resp = self.s.recv(8)
         print("resp")
         print(resp)
         if len(resp) < 8:
             print(len(resp), resp)
         command, nItems = struct.unpack("II", resp)
-        ret = {
-            "clientOrder": {},
-            "roundTime": [],
-            "throughput": []
-        }
+
+        print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+        print(command)
+        if command == 4:
+            return 'end'
+        ret = {}
         for i in range(nItems):
             dr = self.s.recv(8 * 4)
-            clientOrder, clientId, roundTime, throughput = struct.unpack("QQdd", dr)
-            ret["clientOrder"][clientId] = clientOrder
-            ret["roundTime"].append(roundTime)
-            ret["throughput"].append(throughput)
-
-        print("hello")
-        print(ret["clientOrder"])
+            eid, startTime, endTime, throughput = struct.unpack("Qddd", dr)
+            temp = {"startTime": startTime, "endTime": endTime, "throughput": throughput}
+            ret[eid] = temp
         return ret
+
 
     def disconnect(self):
         # self.sendRequest(requestType=2, array=[])
