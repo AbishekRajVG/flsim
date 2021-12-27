@@ -1,7 +1,7 @@
 {
     "clients": {
         "total": 20,
-        "per_round": 20,
+        "per_round": 5,
         "label_distribution": "uniform",
         "do_test": false,
         "test_partition": 0.2,
@@ -23,7 +23,7 @@
         }
     },
     "federated_learning": {
-        "rounds": 50,
+        "rounds": 10,
         "target_accuracy": 0.95,
         "task": "train",
         "epochs": 5,
@@ -31,7 +31,7 @@
     },
     "model": {
         "name": "MNIST",
-        "size": 1600
+        "size": 160
     },
     "paths": {
         "data": "./data",

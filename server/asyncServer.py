@@ -164,7 +164,7 @@ class AsyncServer(Server):
                     client_id = key
 
                 select_client = id_to_client[client_id][0]
-                select_client.delay = simdata[client_id]["endTime"] - simdata[client_id]["startTime"]
+                select_client.delay = simdata[client_id]["endTime"]
                 T_client = id_to_client[client_id][1]
                 throughputs.append(simdata[client_id]["throughput"])
 
