@@ -114,13 +114,16 @@ class AsyncServer(Server):
         time.sleep(1)
         network.connect()
 
+        f = open("dropout.txt", "a")
+
         for round in range(1, rounds + 1):
             logging.info('**** Round {}/{} ****'.format(round, rounds))
-
+            f.write('**** Round {}/{} ****'.format(round, rounds))
+            f.flush()
             # Perform async rounds of federated learning with certain
             # grouping strategy
             self.rm_old_models(self.config.paths.model, T_old)
-            accuracy, T_new = self.async_round(round, T_old, network)
+            accuracy, T_new = self.async_round(round, T_old, network, f)
 
             # Update time
             T_old = T_new
@@ -135,7 +138,9 @@ class AsyncServer(Server):
                 pickle.dump(self.saved_reports, f)
             logging.info('Saved reports: {}'.format(reports_path))
 
-    def async_round(self, round, T_old, network):
+        f.close()
+
+    def async_round(self, round, T_old, network, f):
         """Run one async round for T_async"""
         import fl_model  # pylint: disable=import-error
         target_accuracy = self.config.fl.target_accuracy
@@ -148,8 +153,10 @@ class AsyncServer(Server):
         network.sendAsyncRequest(requestType=1, array=parsed_clients)
 
         id_to_client = {}
+        client_finished = {}
         for client in sample_clients:
             id_to_client[client.client_id] = (client, T_old)
+            client_finished[client.client_id] = False
 
         T_new = T_old
         throughputs = []
@@ -166,6 +173,7 @@ class AsyncServer(Server):
                 select_client = id_to_client[client_id][0]
                 select_client.delay = simdata[client_id]["endTime"]
                 T_client = id_to_client[client_id][1]
+                client_finished[client_id] = True
                 throughputs.append(simdata[client_id]["throughput"])
 
                 self.async_configuration([select_client], T_client)
@@ -225,6 +233,10 @@ class AsyncServer(Server):
         logging.info('Round lasts {} secs, avg throughput {} kB/s'.format(
             T_new, self.throughput
         ))
+        for c in client_finished:
+            if not client_finished[c]:
+                f.write(str(c))
+                f.flush()
         return self.records.get_latest_acc(), self.records.get_latest_t()
 
 
