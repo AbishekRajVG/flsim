@@ -27,6 +27,20 @@ class Record(object):
                             self.alpha * acc)
         self.last_acc = self.acc[-1]
 
+    def async_time_graphs(self, t, acc, throughput):
+        self.t.append(t)
+        self.throughput.append(throughput)
+        if len(self.acc) == 0:
+            self.acc.append(acc)
+        else:
+            self.acc.append((1 - self.alpha) * self.last_acc + \
+                    self.alpha * acc)
+        self.last_acc = self.acc[-1]
+
+    def async_round_graphs(self, round_num, dropout):
+        self.round.append(round_num)
+        self.dropout.append(dropout)
+
     def get_latest_t(self):
         return self.t[-1]
 
@@ -52,13 +66,22 @@ class Record(object):
         throughput = np.expand_dims(np.array(self.throughput), axis=1)
         dropouts = np.expand_dims(np.array(self.dropout), axis=1)
 
-        rows = np.concatenate((rounds, t, acc, throughput, dropouts), axis=1).tolist()
+        rows = np.concatenate((t, acc, throughput), axis=1).tolist()
 
-        fields = ['round', 'time', 'acc', 'throughput', 'dropout']
+        fields = ['time', 'acc', 'throughput']
         with open(filename, 'w') as f:
             write = csv.writer(f)
             write.writerow(fields)
             for row in rows:
+                write.writerow(row)
+
+        rows2 = np.concatenate((rounds, dropouts), axis=1).tolist()
+        fields2 = ['rounds', 'dropouts']
+        filename2 = filename + "_dropouts_"
+        with open(filename2, 'w') as f:
+            write = csv.writer(f)
+            write.writerow(fields2)
+            for row in rows2:
                 write.writerow(row)
 
     def plot_record(self, figname):

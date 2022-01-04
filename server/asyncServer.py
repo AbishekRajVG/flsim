@@ -119,6 +119,7 @@ class AsyncServer(Server):
         for round in range(1, rounds + 1):
             logging.info('**** Round {}/{} ****'.format(round, rounds))
             f.write('**** Round {}/{} ****'.format(round, rounds))
+            f.write('\n')
             f.flush()
             # Perform async rounds of federated learning with certain
             # grouping strategy
@@ -138,6 +139,7 @@ class AsyncServer(Server):
                 pickle.dump(self.saved_reports, f)
             logging.info('Saved reports: {}'.format(reports_path))
 
+        network.disconnect()
         f.close()
 
     def async_round(self, round, T_old, network, f):
@@ -219,7 +221,7 @@ class AsyncServer(Server):
                 if len(throughputs) > 0:
                     self.throughput = sum([t for t in throughputs])/len(throughputs)
                 logging.info('Average accuracy: {:.2f}%\n'.format(100 * accuracy))
-                self.records.append_record(T_cur, accuracy, self.throughput, 0, round)
+                self.records.async_time_graphs(T_cur, accuracy, self.throughput)
 
             # Return when target accuracy is met
                 if target_accuracy and \
@@ -233,10 +235,15 @@ class AsyncServer(Server):
         logging.info('Round lasts {} secs, avg throughput {} kB/s'.format(
             T_new, self.throughput
         ))
+        cnt = 0
         for c in client_finished:
             if not client_finished[c]:
+                cnt = cnt + 1
                 f.write(str(c))
+                f.write('\n')
                 f.flush()
+
+        self.records.async_round_graphs(round, cnt)
         return self.records.get_latest_acc(), self.records.get_latest_t()
 
 
