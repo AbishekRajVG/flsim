@@ -6,7 +6,7 @@ import subprocess
 
 TCP_IP = '127.0.0.1'
 TCP_PORT = 8080
-PATH='../ns-allinone-3.34/ns-3.34'
+PATH='../ns3-fl-network'
 PROGRAM='wifi_exp'
 
 class Network(object):
