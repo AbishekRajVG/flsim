@@ -79,7 +79,7 @@ class Network(object):
     def sendAsyncRequest(self, *, requestType: int, array: list):
         print("sending")
         print(array)
-        message = struct.pack("II", 1, len(array))
+        message = struct.pack("II",requestType , len(array))
         self.s.send(message)
         # for the total number of clients
         # is the index in lit at client.id equal
@@ -96,7 +96,7 @@ class Network(object):
 
         print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
         print(command)
-        if command == 4:
+        if command == 3:
             return 'end'
         ret = {}
         for i in range(nItems):
@@ -108,6 +108,6 @@ class Network(object):
 
 
     def disconnect(self):
-        # self.sendRequest(requestType=2, array=[])
+        # self.sendAsyncRequest(requestType=2, array=[])
         self.s.close()
 

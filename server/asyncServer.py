@@ -12,44 +12,6 @@ from network import Network
 from .record import Record, Profile
 
 
-class Group(object):
-    """Basic async group."""
-    def __init__(self, client_list):
-        self.clients = client_list
-
-    def set_download_time(self, download_time):
-        self.download_time = download_time
-
-    def set_aggregate_time(self):
-        """Only run after client configuration"""
-        assert (len(self.clients) > 0), "Empty clients in group init!"
-        self.delay = max([c.delay for c in self.clients])
-        self.aggregate_time = self.download_time + self.delay
-
-        # Get average throughput contributed by this group
-        assert (self.clients[0].model_size > 0), "Zero model size in group init!"
-        self.throughput = len(self.clients) * self.clients[0].model_size / \
-                self.delay
-
-    def __eq__(self, other):
-        return self.aggregate_time == other.aggregate_time
-
-    def __ne__(self, other):
-        return self.aggregate_time != other.aggregate_time
-
-    def __lt__(self, other):
-        return self.aggregate_time < other.aggregate_time
-
-    def __le__(self, other):
-        return self.aggregate_time <= other.aggregate_time
-
-    def __gt__(self, other):
-        return self.aggregate_time > other.aggregate_time
-
-    def __ge__(self, other):
-        return self.aggregate_time >= other.aggregate_time
-
-
 class AsyncServer(Server):
     """Asynchronous federated learning server."""
 

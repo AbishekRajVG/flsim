@@ -77,7 +77,7 @@ class Record(object):
 
         rows2 = np.concatenate((rounds, dropouts), axis=1).tolist()
         fields2 = ['rounds', 'dropouts']
-        filename2 = filename + "_dropouts_"
+        filename2 = filename + "_dropouts.csv"
         with open(filename2, 'w') as f:
             write = csv.writer(f)
             write.writerow(fields2)

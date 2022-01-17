@@ -138,7 +138,7 @@ class SyncServer(Server):
             group.set_aggregate_time()
         self.throughput = 0
         if len(throughput) > 0:
-            self.throughput = sum([t for t in throughput])/len(throughput)
+            self.throughput = sum([t for t in throughput]) / len(throughput)
         print("throughputs")
         print(throughput)
         print("dropouts: " + str(dropouts))
