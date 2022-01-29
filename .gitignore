@@ -114,3 +114,5 @@ data/
 *.pkl
 *.png
 *.csv
+*.csv_dropouts_
+*.txt
