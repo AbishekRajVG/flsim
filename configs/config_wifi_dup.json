@@ -1,11 +1,11 @@
 {
     "clients": {
-        "total": 50,
+        "total": 40,
         "per_round": 10,
         "label_distribution": "uniform",
         "do_test": false,
         "test_partition": 0.2,
-        "selection": "short_latency_high_loss_first"
+        "selection": "random"
     },
     "data": {
         "loading": "dynamic",
@@ -31,7 +31,7 @@
     },
     "model": {
         "name": "MNIST",
-        "size": 1.6
+        "size": 1600
     },
     "paths": {
         "data": "./data",
