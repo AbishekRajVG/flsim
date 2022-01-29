@@ -65,7 +65,9 @@ class SyncServer(Server):
 
         # Initiate client profile of loss and delay
         self.profile = Profile(num_clients)
-        self.profile.set_primary_label([client.pref for client in self.clients])
+        if self.config.data.IID == False:
+            print("Non IID")
+            self.profile.set_primary_label([client.pref for client in self.clients])
 
     # Run synchronous federated learning
     def run(self):
@@ -129,7 +131,7 @@ class SyncServer(Server):
                     print("skip " + str(client.client_id))
                     print("roundTime" + str(simdata[client.client_id]["roundTime"]))
                     continue
-
+                client.est_delay = simdata[client.client_id]["roundTime"]
                 client.delay = simdata[client.client_id]["roundTime"]
                 delays.append(simdata[client.client_id]["roundTime"])
                 sample_clients.append(client)
@@ -200,11 +202,43 @@ class SyncServer(Server):
     def selection(self, network):
         # Select devices to participate in round
         clients_per_round = self.config.clients.per_round
+        select_type = self.config.clients.selection
 
+        if select_type == 'random':
         # Select clients randomly
-        sample_clients = [client for client in random.sample(
-            self.clients, clients_per_round)]
+            sample_clients = [client for client in random.sample(
+                self.clients, clients_per_round)]
+            print("random")
 
+        elif select_type == 'short_latency_first':
+            # Select the clients with short latencies and random loss
+            sample_clients = sorted(self.clients, key=lambda c:c.est_delay)
+            sample_clients = sample_clients[:clients_per_round]
+            print(select_type)
+
+        elif select_type == 'high_loss_first':
+            # Select the clients with random latencies and high loss
+            sample_clients = sorted(self.clients, key=lambda c:c.loss, reverse = True)
+            sample_clients = sample_clients[:clients_per_round]
+            print(select_type)
+
+        elif select_type == 'short_latency_high_loss_first':
+            # Get the non-negative losses and delays
+            losses = [c.loss for c in self.clients]
+            losses_norm = [l/max(losses) for l in losses]
+            delays = [c.est_delay for c in self.clients]
+            delays_norm = [d/max(losses) for d in delays]
+
+            # Sort the clients by jointly consider latency and loss
+            gamma = 0.2
+            sorted_idx = sorted(range(len(self.clients)),
+                                key=lambda i: losses_norm[i] - gamma * delays_norm[i],
+                                reverse=True)
+            print([losses[i] for i in sorted_idx])
+            print([delays[i] for i in sorted_idx])
+            sample_clients = [self.clients[i] for i in sorted_idx]
+            sample_clients = sample_clients[:clients_per_round]
+            print(select_type)
         # In sync case, create one group of all selected clients
         sample_groups = [Group([client for client in sample_clients])]
 

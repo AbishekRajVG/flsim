@@ -5,7 +5,7 @@
         "label_distribution": "uniform",
         "do_test": false,
         "test_partition": 0.2,
-        "selection": "short_latency_high_loss_first"
+        "selection": "random"
     },
     "data": {
         "loading": "dynamic",
@@ -16,11 +16,11 @@
                 200
             ]
         },
-        "IID": true,
+        "IID": false,
         "bias": {
-		"primary": 0.8,
-		"secondary": false
-	}
+            "primary": 0.8,
+            "secondary": false
+        }
     },
     "federated_learning": {
         "rounds": 100,
@@ -31,7 +31,7 @@
     },
     "model": {
         "name": "MNIST",
-        "size": 1.6
+        "size": 1600
     },
     "paths": {
         "data": "./data",
@@ -39,7 +39,7 @@
         "reports": "reports.pkl",
         "plot": "./plots"
     },
-    "server": "sync",
+    "server": "async",
     "async": {
         "alpha": 0.9,
         "staleness_func": "polynomial"
@@ -50,10 +50,10 @@
         "std": 0
     },
     "network": {
-        "type": "wifi",
+        "type": "ethernet",
         "wifi": {
-            "tx_gain": 20,
-            "max_packet_size": 1024
+            "tx_gain": 0,
+            "max_packet_size": 256
         },
         "ethernet": {
             "max_packet_size": 1024

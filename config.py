@@ -34,7 +34,7 @@ class Config(object):
         self.data = namedtuple('data', fields)(*params)
 
         # Determine correct data loader
-        assert self.data.IID ^ bool(self.data.bias) ^ bool(self.data.shard)
+        #assert self.data.IID ^ bool(self.data.bias) ^ bool(self.data.shard)
         if self.data.IID:
             self.loader = 'basic'
         elif self.data.bias:
