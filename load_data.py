@@ -75,6 +75,7 @@ class Loader(object):
 
         # Use uniform distribution
         dist = dists.uniform(partition_size, len(self.labels))
+        print(dist)
 
         partition = []  # Extract data according to distribution
         for i, label in enumerate(self.labels):

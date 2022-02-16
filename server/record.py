@@ -20,11 +20,12 @@ class Record(object):
         self.throughput.append(throughput)
         self.dropout.append(dropout)
         self.round.append(round_num)
-        if len(self.acc) == 0:
-            self.acc.append(acc)
-        else:
-            self.acc.append((1 - self.alpha) * self.last_acc + \
-                            self.alpha * acc)
+        self.acc.append(acc)
+        #if len(self.acc) == 0:
+        #    self.acc.append(acc)
+        #else:
+        #    self.acc.append((1 - self.alpha) * self.last_acc + \
+        #                    self.alpha * acc)
         self.last_acc = self.acc[-1]
 
     def async_time_graphs(self, t, acc, throughput):
@@ -122,8 +123,8 @@ class Profile(object):
         Note, pref is a list of string labels like '3 - three'
         We need to convert the list of string labels to integers
         """
-        #pref_int = [int(s.split('-')[0].strip()) for s in pref_str]
-        self.primary_label = np.array(pref_str)
+        pref_int = [int(s.split('-')[0].strip()) for s in pref_str]
+        self.primary_label = np.array(pref_int)
 
     def update(self, client_idx, loss, delay, flatten_weights):
         if self.loss[client_idx] > 0:
