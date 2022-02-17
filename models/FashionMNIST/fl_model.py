@@ -12,6 +12,7 @@ lr = 0.01
 momentum = 0.5
 log_interval = 10
 loss_thres = 0.01
+rou = 0.75
 # Cuda settings
 use_cuda = torch.cuda.is_available()
 device = torch.device (  # pylint: disable=no-member
@@ -85,11 +86,23 @@ def load_weights(model, weights):
 
     model.load_state_dict(updated_state_dict, strict=False)
 
+def flatten_weights(weights):
+    # Flatten weights into vectors
+    weight_vecs = []
+    for _, weight in weights:
+        weight_vecs.extend(weight.flatten().tolist())
 
-def train(model, trainloader, optimizer, epochs):
+    return np.array(weight_vecs)
+
+def train(model, trainloader, optimizer, epochs, reg):
     model.to(device)
     model.train()
     criterion = nn.CrossEntropyLoss()
+
+    # Get the snapshot of weights when training starts, if regularization is on
+    if reg is not None:
+        old_weights = flatten_weights(extract_weights(model))
+        old_weights = torch.from_numpy(old_weights)
 
     for epoch in range(1, epochs + 1):
         for batch_id, data in enumerate(trainloader):
@@ -98,8 +111,17 @@ def train(model, trainloader, optimizer, epochs):
 
             outputs = model(inputs)
             loss = criterion(outputs, labels)
-
             optimizer.zero_grad()
+
+            # Add regularization
+            if reg is not None:
+                new_weights = flatten_weights(extract_weights(model))
+                new_weights = torch.from_numpy(new_weights)
+                mse_loss = nn.MSELoss(reduction='sum')
+                l2_loss = rou/2 * mse_loss(new_weights, old_weights)
+                l2_loss = l2_loss.to(torch.float32)
+                loss += l2_loss
+
             loss.backward()
             optimizer.step()
             if batch_id % log_interval == 0:

@@ -230,7 +230,7 @@ class SyncServer(Server):
             delays_norm = [d/max(losses) for d in delays]
 
             # Sort the clients by jointly consider latency and loss
-            gamma = 0.01
+            gamma = 0.2
             #0.2 for mnist
             sorted_idx = sorted(range(len(self.clients)),
                                 key=lambda i: losses_norm[i] - gamma * delays_norm[i],

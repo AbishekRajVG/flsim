@@ -45,7 +45,8 @@ class AsyncServer(Server):
 
         # Initiate client profile of loss and delay
         self.profile = Profile(num_clients)
-        self.profile.set_primary_label([client.pref for client in self.clients])
+        if self.config.data.IID == False:
+            self.profile.set_primary_label([client.pref for client in self.clients])
 
     # Run asynchronous federated learning
     def run(self):
