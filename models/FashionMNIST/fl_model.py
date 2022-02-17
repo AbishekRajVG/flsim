@@ -13,6 +13,7 @@ momentum = 0.9
 log_interval = 10
 rou = 1
 loss_thres = 0.0001
+
 # Cuda settings
 use_cuda = torch.cuda.is_available()
 device = torch.device (  # pylint: disable=no-member
@@ -112,7 +113,6 @@ def train(model, trainloader, optimizer, epochs, reg = None):
 
             outputs = model(inputs)
             loss = criterion(outputs, labels)
-
             optimizer.zero_grad()
 
             # Add regularization

@@ -152,6 +152,7 @@ class Client(object):
         self.loss = fl_model.train(self.model, trainloader,
                        self.optimizer, self.epochs, reg) #not reg
 
+
         # Extract model weights and biases
         weights = fl_model.extract_weights(self.model)
 
