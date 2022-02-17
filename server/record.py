@@ -20,11 +20,12 @@ class Record(object):
         self.throughput.append(throughput)
         self.dropout.append(dropout)
         self.round.append(round_num)
-        if len(self.acc) == 0:
-            self.acc.append(acc)
-        else:
-            self.acc.append((1 - self.alpha) * self.last_acc + \
-                            self.alpha * acc)
+        self.acc.append(acc)
+        #if len(self.acc) == 0:
+        #    self.acc.append(acc)
+        #else:
+        #    self.acc.append((1 - self.alpha) * self.last_acc + \
+        #                    self.alpha * acc)
         self.last_acc = self.acc[-1]
 
     def async_time_graphs(self, t, acc, throughput):

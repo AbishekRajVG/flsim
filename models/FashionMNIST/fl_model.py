@@ -9,10 +9,11 @@ import numpy as np
 
 # Training settings
 lr = 0.01
-momentum = 0.5
+momentum = 0.9
 log_interval = 10
-loss_thres = 0.01
-rou = 0.75
+rou = 1
+loss_thres = 0.0001
+
 # Cuda settings
 use_cuda = torch.cuda.is_available()
 device = torch.device (  # pylint: disable=no-member
@@ -59,7 +60,7 @@ class Net(nn.Module):
 
 
 def get_optimizer(model):
-    return optim.Adam(model.parameters(), lr=lr)
+    return optim.SGD(model.parameters(), lr=lr, momentum=momentum)
 
 
 def get_trainloader(trainset, batch_size):
@@ -94,7 +95,8 @@ def flatten_weights(weights):
 
     return np.array(weight_vecs)
 
-def train(model, trainloader, optimizer, epochs, reg):
+
+def train(model, trainloader, optimizer, epochs, reg = None):
     model.to(device)
     model.train()
     criterion = nn.CrossEntropyLoss()
