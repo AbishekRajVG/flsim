@@ -123,8 +123,8 @@ class Profile(object):
         Note, pref is a list of string labels like '3 - three'
         We need to convert the list of string labels to integers
         """
-        pref_int = [int(s.split('-')[0].strip()) for s in pref_str]
-        self.primary_label = np.array(pref_int)
+        #pref_int = [int(s.split('-')[0].strip()) for s in pref_str]
+        self.primary_label = np.array(pref_str)
 
     def update(self, client_idx, loss, delay, flatten_weights):
         if self.loss[client_idx] > 0:
