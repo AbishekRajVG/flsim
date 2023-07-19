@@ -5,6 +5,7 @@ import os
 import server
 from datetime import datetime
 import time
+import os
 
 # Set up parser
 parser = argparse.ArgumentParser()
@@ -43,6 +44,15 @@ def main():
 
     # Run federated learning
     fl_server.run()
+    
+    csv_path = './csv_records/'
+    plot_path = './plots/'
+
+    try:
+        os.mkdir(csv_path)
+        os.mkdir(plot_path)
+    except FileExistsError:
+        print("Folder already exists")
 
     # Save and plot accuracy-time curve
     if fl_config.server == "sync" or fl_config.server == "async":
@@ -50,11 +60,11 @@ def main():
         network_type = fl_config.network.type
         total_clients = str(fl_config.clients.total)
         per_round = str(fl_config.clients.per_round)
-
-        fl_server.records.save_record('{}_{}_{}_{}outOf{}.csv'.format(
+        
+        fl_server.records.save_record(csv_path + '{}_{}_{}_{}outOf{}.csv'.format(
             fl_config.server, d_str, network_type, per_round, total_clients
         ))
-        fl_server.records.plot_record('{}_{}_{}_{}outOf{}.png'.format(
+        fl_server.records.plot_record(plot_path + '{}_{}_{}_{}outOf{}.png'.format(
             fl_config.server, d_str, network_type, per_round, total_clients
         ))
 

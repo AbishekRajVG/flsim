@@ -1,0 +1,63 @@
+{
+    "clients": {
+        "total": 5,
+        "per_round": 3,
+        "label_distribution": "uniform",
+        "do_test": false,
+        "test_partition": 0.2,
+        "selection": "short_latency_high_loss_first"
+    },
+    "data": {
+        "loading": "static",
+        "partition": {
+            "size": 100,
+            "range": [
+                20,
+                40
+            ]
+        },
+        "IID": false,
+        "bias": {
+            "primary": 0.8,
+            "secondary": false
+        }
+    },
+    "federated_learning": {
+        "rounds": 10,
+        "target_accuracy": 0.70,
+        "task": "train",
+        "epochs": 3,
+        "batch_size": 10
+    },
+    "model": {
+        "name": "CIFAR-10",
+        "size": 1600
+    },
+    "paths": {
+        "data": "./data",
+        "model": "./models",
+        "reports": "reports.pkl",
+        "plot": "./plots"
+    },
+    "server": "async",
+    "async": {
+        "alpha": 0.9,
+        "staleness_func": "polynomial"
+    },
+    "link_speed": {
+        "min": 5000,
+        "max": 5000,
+        "std": 0
+    },
+    "network": {
+        "type": "wifi",
+        "wifi": {
+            "tx_gain": 0,
+            "max_packet_size": 256
+        },
+        "ethernet": {
+            "max_packet_size": 1024
+        }
+    },
+    "plot_interval": 1
+}

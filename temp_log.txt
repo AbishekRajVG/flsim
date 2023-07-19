@@ -1,0 +1,580 @@
+/dcs/pg22/u2238887/.conda/envs/fl-py37/lib/python3.7/site-packages/torchvision/io/image.py:13: UserWarning: Failed to load image Python extension: /dcs/pg22/u2238887/.conda/envs/fl-py37/lib/python3.7/site-packages/torchvision/image.so: undefined symbol: _ZN5torch3jit17parseSchemaOrNameERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE
+  warn(f"Failed to load image Python extension: {e}")
+[INFO][19:00:27]: Booting async server...
+[INFO][19:00:35]: Dataset size: 50000
+[INFO][19:00:35]: Loader: bias, IID: False
+[INFO][19:00:35]: Model: model(name='CIFAR-10', size=1600)
+[INFO][19:00:35]: Saved global model: ./models/CIFAR-10/global_0.0
+[INFO][19:00:35]: Total clients: 5
+[INFO][19:00:35]: Label distribution: [0, 1, 0, 1, 0, 0, 2, 0, 0, 1]
+[INFO][19:00:35]: Speed distribution: [5000.0, 5000.0, 5000.0, 5000.0, 5000.0] Kbps
+[INFO][19:00:39]: Training: 10 rounds or 70.0% accuracy
+
+[INFO][19:00:41]: **** Round 1/10 ****
+{NumClients:5,NetworkType:wifi,MaxPacketSize:256,TxGain:0}
+INIT:J=0 r=20 th=0
+INIT:J=1 r=40 th=0.2
+INIT:J=2 r=80 th=0.4
+INIT:J=3 r=160 th=0.6
+INIT:J=4 r=20 th=0.8
+[INFO][19:02:11]: Load global model: ./models/CIFAR-10/global_0.0
+[INFO][19:02:11]: Training on client #2, mean delay 104.642601553s
+[INFO][19:02:13]: loss: 2.8352630138397217 l2_loss: 1.1481800079345703
+[INFO][19:02:13]: Training finished on clients Client #2 at time 104.642601553 s
+[INFO][19:02:13]: Reports recieved: 1
+[INFO][19:02:13]: Aggregating updates from clients Client #2
+[INFO][19:02:13]: polynomial staleness: 104.642601553 alpha_t: 0.08756347040531981
+[INFO][19:02:13]: Saved global model: ./models/CIFAR-10/global_104.642601553
+[INFO][19:02:31]: Average accuracy: 10.00%
+
+[INFO][19:02:34]: Load global model: ./models/CIFAR-10/global_0.0
+[INFO][19:02:34]: Training on client #1, mean delay 123.629586013s
+[INFO][19:02:35]: loss: 1.2142260074615479 l2_loss: 0.8033381700515747
+[INFO][19:02:35]: Training finished on clients Client #1 at time 123.629586013 s
+[INFO][19:02:35]: Reports recieved: 1
+[INFO][19:02:35]: Aggregating updates from clients Client #1
+[INFO][19:02:35]: polynomial staleness: 123.629586013 alpha_t: 0.08061798392725517
+[INFO][19:02:35]: Saved global model: ./models/CIFAR-10/global_123.629586013
+[INFO][19:02:54]: Average accuracy: 10.00%
+
+[INFO][19:03:13]: Load global model: ./models/CIFAR-10/global_0.0
+[INFO][19:03:13]: Training on client #0, mean delay 165.623517343s
+[INFO][19:03:13]: loss: 1.7073006629943848 l2_loss: 0.989086925983429
+[INFO][19:03:13]: Training finished on clients Client #0 at time 165.623517343 s
+[INFO][19:03:13]: Reports recieved: 1
+[INFO][19:03:13]: Aggregating updates from clients Client #0
+[INFO][19:03:13]: polynomial staleness: 165.623517343 alpha_t: 0.06972272628142294
+[INFO][19:03:13]: Saved global model: ./models/CIFAR-10/global_165.623517343
+[INFO][19:03:15]: Average accuracy: 10.00%
+
+[INFO][19:03:15]: Round lasts 165.623517343 secs, avg throughput 373.39281605488327 kB/s
+[INFO][19:03:15]: **** Round 2/10 ****
+[INFO][19:03:15]: Remove model global_104.642601553
+[INFO][19:03:15]: Remove model global_0.0
+[INFO][19:03:15]: Remove model global_123.629586013
+[INFO][19:04:45]: Load global model: ./models/CIFAR-10/global_165.623517343
+[INFO][19:04:45]: Training on client #4, mean delay 262.272073135s
+[INFO][19:04:46]: loss: 2.470245838165283 l2_loss: 1.4437283277511597
+[INFO][19:04:46]: Training finished on clients Client #4 at time 427.89559047800003 s
+[INFO][19:04:46]: Reports recieved: 1
+[INFO][19:04:46]: Aggregating updates from clients Client #4
+[INFO][19:04:46]: polynomial staleness: 262.272073135 alpha_t: 0.055467694227956915
+[INFO][19:04:46]: Saved global model: ./models/CIFAR-10/global_427.89559047800003
+[INFO][19:04:59]: Average accuracy: 10.00%
+
+[INFO][19:04:59]: Load global model: ./models/CIFAR-10/global_165.623517343
+[INFO][19:04:59]: Training on client #3, mean delay 264.25507557000003s
+[INFO][19:05:00]: loss: 2.065263032913208 l2_loss: 0.7283452153205872
+[INFO][19:05:00]: Training finished on clients Client #3 at time 429.87859291300003 s
+[INFO][19:05:00]: Reports recieved: 1
+[INFO][19:05:00]: Aggregating updates from clients Client #3
+[INFO][19:05:00]: polynomial staleness: 264.25507557000003 alpha_t: 0.05525997168767467
+[INFO][19:05:00]: Saved global model: ./models/CIFAR-10/global_429.87859291300003
+[INFO][19:05:01]: Average accuracy: 10.00%
+
+[INFO][19:05:01]: Load global model: ./models/CIFAR-10/global_165.623517343
+[INFO][19:05:01]: Training on client #2, mean delay 268.269816793s
+[INFO][19:05:02]: loss: 1.534224033355713 l2_loss: 0.6959742307662964
+[INFO][19:05:02]: Training finished on clients Client #2 at time 433.893334136 s
+[INFO][19:05:02]: Reports recieved: 1
+[INFO][19:05:02]: Aggregating updates from clients Client #2
+[INFO][19:05:02]: polynomial staleness: 268.269816793 alpha_t: 0.05484646886803533
+[INFO][19:05:02]: Saved global model: ./models/CIFAR-10/global_433.893334136
+[INFO][19:05:04]: Average accuracy: 10.00%
+
+[INFO][19:05:04]: Round lasts 433.893334136 secs, avg throughput 784.9055609913138 kB/s
+[INFO][19:05:04]: **** Round 3/10 ****
+[INFO][19:05:04]: Remove model global_427.89559047800003
+[INFO][19:05:04]: Remove model global_165.623517343
+[INFO][19:05:04]: Remove model global_429.87859291300003
+[INFO][19:06:20]: Load global model: ./models/CIFAR-10/global_433.893334136
+[INFO][19:06:20]: Training on client #4, mean delay 193.95038952s
+[INFO][19:06:20]: loss: 1.6832443475723267 l2_loss: 0.9771004915237427
+[INFO][19:06:20]: Training finished on clients Client #4 at time 627.8437236560001 s
+[INFO][19:06:20]: Reports recieved: 1
+[INFO][19:06:20]: Aggregating updates from clients Client #4
+[INFO][19:06:20]: polynomial staleness: 193.95038952 alpha_t: 0.0644585387211474
+[INFO][19:06:20]: Saved global model: ./models/CIFAR-10/global_627.8437236560001
+[INFO][19:06:41]: Average accuracy: 10.00%
+
+[INFO][19:06:41]: Load global model: ./models/CIFAR-10/global_433.893334136
+[INFO][19:06:41]: Training on client #3, mean delay 198.577536457s
+[INFO][19:06:44]: loss: 1.8145990371704102 l2_loss: 0.7175233364105225
+[INFO][19:06:44]: Training finished on clients Client #3 at time 632.470870593 s
+[INFO][19:06:44]: Reports recieved: 1
+[INFO][19:06:44]: Aggregating updates from clients Client #3
+[INFO][19:06:44]: polynomial staleness: 198.577536457 alpha_t: 0.06370693051494715
+[INFO][19:06:44]: Saved global model: ./models/CIFAR-10/global_632.470870593
+[INFO][19:07:05]: Average accuracy: 10.08%
+
+[INFO][19:07:27]: Load global model: ./models/CIFAR-10/global_433.893334136
+[INFO][19:07:27]: Training on client #0, mean delay 265.28097190799997s
+[INFO][19:07:27]: loss: 1.7939242124557495 l2_loss: 0.7898385524749756
+[INFO][19:07:27]: Training finished on clients Client #0 at time 699.174306044 s
+[INFO][19:07:27]: Reports recieved: 1
+[INFO][19:07:27]: Aggregating updates from clients Client #0
+[INFO][19:07:27]: polynomial staleness: 265.28097190799997 alpha_t: 0.055153419366740446
+[INFO][19:07:27]: Saved global model: ./models/CIFAR-10/global_699.174306044
+[INFO][19:07:29]: Average accuracy: 10.00%
+
+[INFO][19:07:29]: Round lasts 699.174306044 secs, avg throughput 867.0386834466849 kB/s
+[INFO][19:07:29]: **** Round 4/10 ****
+[INFO][19:07:29]: Remove model global_627.8437236560001
+[INFO][19:07:29]: Remove model global_632.470870593
+[INFO][19:07:29]: Remove model global_433.893334136
+[INFO][19:08:45]: Load global model: ./models/CIFAR-10/global_699.174306044
+[INFO][19:08:45]: Training on client #4, mean delay 254.038701161s
+[INFO][19:08:48]: loss: 1.4694206714630127 l2_loss: 0.8533620834350586
+[INFO][19:08:48]: Training finished on clients Client #4 at time 953.2130072049999 s
+[INFO][19:08:48]: Reports recieved: 1
+[INFO][19:08:48]: Aggregating updates from clients Client #4
+[INFO][19:08:48]: polynomial staleness: 254.038701161 alpha_t: 0.05635590981258196
+[INFO][19:08:48]: Saved global model: ./models/CIFAR-10/global_953.2130072049999
+[INFO][19:09:05]: Average accuracy: 11.03%
+
+[INFO][19:09:05]: Load global model: ./models/CIFAR-10/global_699.174306044
+[INFO][19:09:05]: Training on client #3, mean delay 258.770720417s
+[INFO][19:09:08]: loss: 0.87120521068573 l2_loss: 0.5386969447135925
+[INFO][19:09:08]: Training finished on clients Client #3 at time 957.945026461 s
+[INFO][19:09:08]: Reports recieved: 1
+[INFO][19:09:08]: Aggregating updates from clients Client #3
+[INFO][19:09:08]: polynomial staleness: 258.770720417 alpha_t: 0.05584025720880423
+[INFO][19:09:08]: Saved global model: ./models/CIFAR-10/global_957.945026461
+[INFO][19:09:32]: Average accuracy: 10.00%
+
+[INFO][19:09:52]: Load global model: ./models/CIFAR-10/global_699.174306044
+[INFO][19:09:52]: Training on client #0, mean delay 325.264247281s
+[INFO][19:09:53]: loss: 1.777372121810913 l2_loss: 0.5356255173683167
+[INFO][19:09:53]: Training finished on clients Client #0 at time 1024.438553325 s
+[INFO][19:09:53]: Reports recieved: 1
+[INFO][19:09:53]: Aggregating updates from clients Client #0
+[INFO][19:09:53]: polynomial staleness: 325.264247281 alpha_t: 0.04982619997335941
+[INFO][19:09:53]: Saved global model: ./models/CIFAR-10/global_1024.438553325
+[INFO][19:09:55]: Average accuracy: 10.00%
+
+[INFO][19:09:55]: Round lasts 1024.438553325 secs, avg throughput 882.3020530417416 kB/s
+[INFO][19:09:55]: **** Round 5/10 ****
+[INFO][19:09:55]: Remove model global_953.2130072049999
+[INFO][19:09:55]: Remove model global_957.945026461
+[INFO][19:09:55]: Remove model global_699.174306044
+[INFO][19:11:11]: Load global model: ./models/CIFAR-10/global_1024.438553325
+[INFO][19:11:11]: Training on client #4, mean delay 253.235043593s
+[INFO][19:11:14]: loss: 1.5566860437393188 l2_loss: 0.733219563961029
+[INFO][19:11:14]: Training finished on clients Client #4 at time 1277.673596918 s
+[INFO][19:11:14]: Reports recieved: 1
+[INFO][19:11:14]: Aggregating updates from clients Client #4
+[INFO][19:11:14]: polynomial staleness: 253.235043593 alpha_t: 0.05644491233014974
+[INFO][19:11:15]: Saved global model: ./models/CIFAR-10/global_1277.673596918
+[INFO][19:11:35]: Average accuracy: 10.00%
+
+[INFO][19:11:35]: Load global model: ./models/CIFAR-10/global_1024.438553325
+[INFO][19:11:35]: Training on client #2, mean delay 265.269064791s
+[INFO][19:11:37]: loss: 2.2723991870880127 l2_loss: 0.7263922095298767
+[INFO][19:11:37]: Training finished on clients Client #2 at time 1289.707618116 s
+[INFO][19:11:37]: Reports recieved: 1
+[INFO][19:11:37]: Aggregating updates from clients Client #2
+[INFO][19:11:37]: polynomial staleness: 265.269064791 alpha_t: 0.05515465253829979
+[INFO][19:11:37]: Saved global model: ./models/CIFAR-10/global_1289.707618116
+[INFO][19:11:59]: Average accuracy: 10.00%
+
+[INFO][19:12:22]: Load global model: ./models/CIFAR-10/global_1024.438553325
+[INFO][19:12:22]: Training on client #0, mean delay 325.265634461s
+[INFO][19:12:23]: loss: 0.9635297060012817 l2_loss: 0.42621052265167236
+[INFO][19:12:23]: Training finished on clients Client #0 at time 1349.704187786 s
+[INFO][19:12:23]: Reports recieved: 1
+[INFO][19:12:23]: Aggregating updates from clients Client #0
+[INFO][19:12:23]: polynomial staleness: 325.265634461 alpha_t: 0.04982609405049435
+[INFO][19:12:23]: Saved global model: ./models/CIFAR-10/global_1349.704187786
+[INFO][19:12:25]: Average accuracy: 10.00%
+
+[INFO][19:12:25]: Round lasts 1349.704187786 secs, avg throughput 802.8561123715671 kB/s
+[INFO][19:12:25]: **** Round 6/10 ****
+[INFO][19:12:25]: Remove model global_1277.673596918
+[INFO][19:12:25]: Remove model global_1024.438553325
+[INFO][19:12:25]: Remove model global_1289.707618116
+[INFO][19:13:45]: Load global model: ./models/CIFAR-10/global_1349.704187786
+[INFO][19:13:45]: Training on client #4, mean delay 254.563105587s
+[INFO][19:13:46]: loss: 1.2247369289398193 l2_loss: 0.6967041492462158
+[INFO][19:13:46]: Training finished on clients Client #4 at time 1604.267293373 s
+[INFO][19:13:46]: Reports recieved: 1
+[INFO][19:13:46]: Aggregating updates from clients Client #4
+[INFO][19:13:46]: polynomial staleness: 254.563105587 alpha_t: 0.05629806017783034
+[INFO][19:13:46]: Saved global model: ./models/CIFAR-10/global_1604.267293373
+[INFO][19:14:09]: Average accuracy: 10.31%
+
+[INFO][19:14:09]: Load global model: ./models/CIFAR-10/global_1349.704187786
+[INFO][19:14:09]: Training on client #2, mean delay 265.271788256s
+[INFO][19:14:09]: loss: 1.8552429676055908 l2_loss: 0.6548600196838379
+[INFO][19:14:09]: Training finished on clients Client #2 at time 1614.975976042 s
+[INFO][19:14:09]: Reports recieved: 1
+[INFO][19:14:09]: Aggregating updates from clients Client #2
+[INFO][19:14:09]: polynomial staleness: 265.271788256 alpha_t: 0.05515437047283793
+[INFO][19:14:09]: Saved global model: ./models/CIFAR-10/global_1614.975976042
+[INFO][19:14:28]: Average accuracy: 10.22%
+
+[INFO][19:14:34]: Load global model: ./models/CIFAR-10/global_1349.704187786
+[INFO][19:14:34]: Training on client #1, mean delay 285.274129249s
+[INFO][19:14:34]: loss: 1.6374988555908203 l2_loss: 0.8265172839164734
+[INFO][19:14:34]: Training finished on clients Client #1 at time 1634.978317035 s
+[INFO][19:14:34]: Reports recieved: 1
+[INFO][19:14:34]: Aggregating updates from clients Client #1
+[INFO][19:14:34]: polynomial staleness: 285.274129249 alpha_t: 0.05319262933989169
+[INFO][19:14:34]: Saved global model: ./models/CIFAR-10/global_1634.978317035
+[INFO][19:14:36]: Average accuracy: 10.56%
+
+[INFO][19:14:36]: Round lasts 1634.978317035 secs, avg throughput 779.9155240821684 kB/s
+[INFO][19:14:36]: **** Round 7/10 ****
+[INFO][19:14:36]: Remove model global_1614.975976042
+[INFO][19:14:36]: Remove model global_1349.704187786
+[INFO][19:14:36]: Remove model global_1604.267293373
+[INFO][19:15:56]: Load global model: ./models/CIFAR-10/global_1634.978317035
+[INFO][19:15:56]: Training on client #4, mean delay 214.664593082s
+[INFO][19:15:58]: loss: 1.8595529794692993 l2_loss: 0.7230333089828491
+[INFO][19:15:58]: Training finished on clients Client #4 at time 1849.642910117 s
+[INFO][19:15:58]: Reports recieved: 1
+[INFO][19:15:58]: Aggregating updates from clients Client #4
+[INFO][19:15:58]: polynomial staleness: 214.664593082 alpha_t: 0.06128484390860336
+[INFO][19:15:58]: Saved global model: ./models/CIFAR-10/global_1849.642910117
+[INFO][19:16:27]: Average accuracy: 10.00%
+
+[INFO][19:16:27]: Load global model: ./models/CIFAR-10/global_1634.978317035
+[INFO][19:16:27]: Training on client #2, mean delay 225.28408084900002s
+[INFO][19:16:28]: loss: 1.8230575323104858 l2_loss: 0.6268811225891113
+[INFO][19:16:28]: Training finished on clients Client #2 at time 1860.262397884 s
+[INFO][19:16:28]: Reports recieved: 1
+[INFO][19:16:28]: Aggregating updates from clients Client #2
+[INFO][19:16:28]: polynomial staleness: 225.28408084900002 alpha_t: 0.05982951858050192
+[INFO][19:16:28]: Saved global model: ./models/CIFAR-10/global_1860.262397884
+[INFO][19:16:45]: Average accuracy: 10.40%
+
+[INFO][19:16:45]: Load global model: ./models/CIFAR-10/global_1634.978317035
+[INFO][19:16:45]: Training on client #1, mean delay 245.280115483s
+[INFO][19:16:45]: loss: 1.5011749267578125 l2_loss: 0.6690810918807983
+[INFO][19:16:45]: Training finished on clients Client #1 at time 1880.2584325179998 s
+[INFO][19:16:45]: Reports recieved: 1
+[INFO][19:16:45]: Aggregating updates from clients Client #1
+[INFO][19:16:45]: polynomial staleness: 245.280115483 alpha_t: 0.057349262212640556
+[INFO][19:16:45]: Saved global model: ./models/CIFAR-10/global_1880.2584325179998
+[INFO][19:16:47]: Average accuracy: 10.43%
+
+[INFO][19:16:47]: Round lasts 1880.2584325179998 secs, avg throughput 775.4115413674671 kB/s
+[INFO][19:16:47]: **** Round 8/10 ****
+[INFO][19:16:47]: Remove model global_1860.262397884
+[INFO][19:16:47]: Remove model global_1849.642910117
+[INFO][19:16:47]: Remove model global_1634.978317035
+[INFO][19:18:06]: Load global model: ./models/CIFAR-10/global_1880.2584325179998
+[INFO][19:18:06]: Training on client #4, mean delay 214.790991502s
+[INFO][19:18:07]: loss: 1.5937259197235107 l2_loss: 0.7371125221252441
+[INFO][19:18:07]: Training finished on clients Client #4 at time 2095.0494240199996 s
+[INFO][19:18:07]: Reports recieved: 1
+[INFO][19:18:07]: Aggregating updates from clients Client #4
+[INFO][19:18:07]: polynomial staleness: 214.790991502 alpha_t: 0.06126689264460954
+[INFO][19:18:07]: Saved global model: ./models/CIFAR-10/global_2095.0494240199996
+[INFO][19:18:32]: Average accuracy: 10.00%
+
+[INFO][19:18:32]: Load global model: ./models/CIFAR-10/global_1880.2584325179998
+[INFO][19:18:32]: Training on client #2, mean delay 225.290101291s
+[INFO][19:18:34]: loss: 2.010054588317871 l2_loss: 0.671008825302124
+[INFO][19:18:34]: Training finished on clients Client #2 at time 2105.5485338089998 s
+[INFO][19:18:34]: Reports recieved: 1
+[INFO][19:18:34]: Aggregating updates from clients Client #2
+[INFO][19:18:34]: polynomial staleness: 225.290101291 alpha_t: 0.05982872269384966
+[INFO][19:18:34]: Saved global model: ./models/CIFAR-10/global_2105.5485338089998
+[INFO][19:18:54]: Average accuracy: 10.54%
+
+[INFO][19:18:54]: Load global model: ./models/CIFAR-10/global_1880.2584325179998
+[INFO][19:18:54]: Training on client #1, mean delay 245.28191603200003s
+[INFO][19:18:55]: loss: 1.587961196899414 l2_loss: 0.6504970788955688
+[INFO][19:18:55]: Training finished on clients Client #1 at time 2125.54034855 s
+[INFO][19:18:55]: Reports recieved: 1
+[INFO][19:18:55]: Aggregating updates from clients Client #1
+[INFO][19:18:55]: polynomial staleness: 245.28191603200003 alpha_t: 0.057349052574135376
+[INFO][19:18:55]: Saved global model: ./models/CIFAR-10/global_2125.54034855
+[INFO][19:18:56]: Average accuracy: 10.61%
+
+[INFO][19:18:56]: Round lasts 2125.54034855 secs, avg throughput 768.8019751013115 kB/s
+[INFO][19:18:56]: **** Round 9/10 ****
+[INFO][19:18:56]: Remove model global_2105.5485338089998
+[INFO][19:18:56]: Remove model global_1880.2584325179998
+[INFO][19:18:56]: Remove model global_2095.0494240199996
+[INFO][19:20:15]: Load global model: ./models/CIFAR-10/global_2125.54034855
+[INFO][19:20:15]: Training on client #4, mean delay 214.625384044s
+[INFO][19:20:19]: loss: 2.3923544883728027 l2_loss: 0.6173999309539795
+[INFO][19:20:19]: Training finished on clients Client #4 at time 2340.165732594 s
+[INFO][19:20:19]: Reports recieved: 1
+[INFO][19:20:19]: Aggregating updates from clients Client #4
+[INFO][19:20:19]: polynomial staleness: 214.625384044 alpha_t: 0.061290415633282885
+[INFO][19:20:19]: Saved global model: ./models/CIFAR-10/global_2340.165732594
+[INFO][19:20:37]: Average accuracy: 10.00%
+
+[INFO][19:20:38]: Load global model: ./models/CIFAR-10/global_2125.54034855
+[INFO][19:20:38]: Training on client #2, mean delay 225.287626638s
+[INFO][19:20:38]: loss: 1.1913580894470215 l2_loss: 0.5355052947998047
+[INFO][19:20:38]: Training finished on clients Client #2 at time 2350.827975188 s
+[INFO][19:20:38]: Reports recieved: 1
+[INFO][19:20:38]: Aggregating updates from clients Client #2
+[INFO][19:20:38]: polynomial staleness: 225.287626638 alpha_t: 0.05982904983264538
+[INFO][19:20:38]: Saved global model: ./models/CIFAR-10/global_2350.827975188
+[INFO][19:20:57]: Average accuracy: 10.77%
+
+[INFO][19:21:04]: Load global model: ./models/CIFAR-10/global_2125.54034855
+[INFO][19:21:04]: Training on client #1, mean delay 245.279448183s
+[INFO][19:21:04]: loss: 2.21931529045105 l2_loss: 0.6945230960845947
+[INFO][19:21:04]: Training finished on clients Client #1 at time 2370.819796733 s
+[INFO][19:21:04]: Reports recieved: 1
+[INFO][19:21:04]: Aggregating updates from clients Client #1
+[INFO][19:21:04]: polynomial staleness: 245.279448183 alpha_t: 0.05734933990718031
+[INFO][19:21:04]: Saved global model: ./models/CIFAR-10/global_2370.819796733
+[INFO][19:21:06]: Average accuracy: 10.67%
+
+[INFO][19:21:06]: Round lasts 2370.819796733 secs, avg throughput 776.6307882431247 kB/s
+[INFO][19:21:06]: **** Round 10/10 ****
+[INFO][19:21:06]: Remove model global_2350.827975188
+[INFO][19:21:06]: Remove model global_2340.165732594
+[INFO][19:21:06]: Remove model global_2125.54034855
+[INFO][19:22:23]: Load global model: ./models/CIFAR-10/global_2370.819796733
+[INFO][19:22:23]: Training on client #4, mean delay 213.83911202899998s
+[INFO][19:22:24]: loss: 1.3489112854003906 l2_loss: 0.5549243688583374
+[INFO][19:22:24]: Training finished on clients Client #4 at time 2584.658908762 s
+[INFO][19:22:24]: Reports recieved: 1
+[INFO][19:22:24]: Aggregating updates from clients Client #4
+[INFO][19:22:24]: polynomial staleness: 213.83911202899998 alpha_t: 0.06140246908140145
+[INFO][19:22:24]: Saved global model: ./models/CIFAR-10/global_2584.658908762
+[INFO][19:22:47]: Average accuracy: 10.00%
+
+[INFO][19:22:50]: Load global model: ./models/CIFAR-10/global_2370.819796733
+[INFO][19:22:50]: Training on client #2, mean delay 227.279483847s
+[INFO][19:22:51]: loss: 1.1898527145385742 l2_loss: 0.5776259899139404
+[INFO][19:22:51]: Training finished on clients Client #2 at time 2598.09928058 s
+[INFO][19:22:51]: Reports recieved: 1
+[INFO][19:22:51]: Aggregating updates from clients Client #2
+[INFO][19:22:51]: polynomial staleness: 227.279483847 alpha_t: 0.05956745816521002
+[INFO][19:22:51]: Saved global model: ./models/CIFAR-10/global_2598.09928058
+[INFO][19:23:08]: Average accuracy: 12.10%
+
+[INFO][19:23:16]: Load global model: ./models/CIFAR-10/global_2370.819796733
+[INFO][19:23:16]: Training on client #1, mean delay 247.271140111s
+[INFO][19:23:16]: loss: 2.164457321166992 l2_loss: 0.6011022329330444
+[INFO][19:23:16]: Training finished on clients Client #1 at time 2618.090936844 s
+[INFO][19:23:16]: Reports recieved: 1
+[INFO][19:23:16]: Aggregating updates from clients Client #1
+[INFO][19:23:16]: polynomial staleness: 247.271140111 alpha_t: 0.05711884146810956
+[INFO][19:23:16]: Saved global model: ./models/CIFAR-10/global_2618.090936844
+[INFO][19:23:18]: Average accuracy: 12.08%
+
+[INFO][19:23:18]: Round lasts 2618.090936844 secs, avg throughput 818.5587210956364 kB/s
+[INFO][19:23:18]: Saved reports: reports.pkl
+[INFO][19:23:18]: The program takes 00h22m51s s
+Files already downloaded and verified
+./waf --run "wifi_exp --NumClients=5 --NetworkType=wifi --ModelSize=1600 --TxGain=0 --MaxPacketSize=256 --LearningModel=async"
+[10.0, 10.0, 10.0, 10.0, 10.0]
+[0.32, 0.32, 0.32, 0.32, 0.32]
+[Client #0, Client #1, Client #2]
+sending
+[1, 1, 1, 0, 0]
+resp
+b'\x00\x00\x00\x00\x01\x00\x00\x00'
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+0
+resp
+b'\x00\x00\x00\x00\x01\x00\x00\x00'
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+0
+resp
+b'\x00\x00\x00\x00\x01\x00\x00\x00'
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+0
+resp
+b'\x03\x00\x00\x00\x00\x00\x00\x00'
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+3
+[10.0, 10.0, 2.8352630138397217, 1.7073006629943848, 1.2142260074615479]
+[0.32, 0.32, 0.32, 0.32, 0.32]
+[Client #3, Client #4, Client #2]
+sending
+[0, 0, 1, 1, 1]
+resp
+b'\x00\x00\x00\x00\x01\x00\x00\x00'
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+0
+resp
+b'\x00\x00\x00\x00\x01\x00\x00\x00'
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+0
+resp
+b'\x00\x00\x00\x00\x01\x00\x00\x00'
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+0
+resp
+b'\x03\x00\x00\x00\x00\x00\x00\x00'
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+3
+[2.470245838165283, 2.065263032913208, 1.7073006629943848, 1.534224033355713, 1.2142260074615479]
+[0.32, 0.32, 0.32, 0.32, 0.32]
+[Client #4, Client #3, Client #0]
+sending
+[1, 0, 0, 1, 1]
+resp
+b'\x00\x00\x00\x00\x01\x00\x00\x00'
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+0
+resp
+b'\x00\x00\x00\x00\x01\x00\x00\x00'
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+0
+resp
+b'\x00\x00\x00\x00\x01\x00\x00\x00'
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+0
+resp
+b'\x03\x00\x00\x00\x00\x00\x00\x00'
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+3
+[1.8145990371704102, 1.7939242124557495, 1.6832443475723267, 1.534224033355713, 1.2142260074615479]
+[0.32, 0.32, 0.32, 0.32, 0.32]
+[Client #3, Client #0, Client #4]
+sending
+[1, 0, 0, 1, 1]
+resp
+b'\x00\x00\x00\x00\x01\x00\x00\x00'
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+0
+resp
+b'\x00\x00\x00\x00\x01\x00\x00\x00'
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+0
+resp
+b'\x00\x00\x00\x00\x01\x00\x00\x00'
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+0
+resp
+b'\x03\x00\x00\x00\x00\x00\x00\x00'
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+3
+[1.777372121810913, 1.534224033355713, 1.4694206714630127, 1.2142260074615479, 0.87120521068573]
+[0.32, 0.32, 0.32, 0.32, 0.32]
+[Client #0, Client #2, Client #4]
+sending
+[1, 0, 1, 0, 1]
+resp
+b'\x00\x00\x00\x00\x01\x00\x00\x00'
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+0
+resp
+b'\x00\x00\x00\x00\x01\x00\x00\x00'
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+0
+resp
+b'\x00\x00\x00\x00\x01\x00\x00\x00'
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+0
+resp
+b'\x03\x00\x00\x00\x00\x00\x00\x00'
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+3
+[2.2723991870880127, 1.5566860437393188, 1.2142260074615479, 0.9635297060012817, 0.87120521068573]
+[0.32, 0.32, 0.32, 0.32, 0.32]
+[Client #2, Client #4, Client #1]
+sending
+[0, 1, 1, 0, 1]
+resp
+b'\x00\x00\x00\x00\x01\x00\x00\x00'
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+0
+resp
+b'\x00\x00\x00\x00\x01\x00\x00\x00'
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+0
+resp
+b'\x00\x00\x00\x00\x01\x00\x00\x00'
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+0
+resp
+b'\x03\x00\x00\x00\x00\x00\x00\x00'
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+3
+[1.8552429676055908, 1.6374988555908203, 1.2247369289398193, 0.9635297060012817, 0.87120521068573]
+[0.32, 0.32, 0.32, 0.32, 0.32]
+[Client #2, Client #1, Client #4]
+sending
+[0, 1, 1, 0, 1]
+resp
+b'\x00\x00\x00\x00\x01\x00\x00\x00'
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+0
+resp
+b'\x00\x00\x00\x00\x01\x00\x00\x00'
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+0
+resp
+b'\x00\x00\x00\x00\x01\x00\x00\x00'
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+0
+resp
+b'\x03\x00\x00\x00\x00\x00\x00\x00'
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+3
+[1.8595529794692993, 1.8230575323104858, 1.5011749267578125, 0.9635297060012817, 0.87120521068573]
+[0.32, 0.32, 0.32, 0.32, 0.32]
+[Client #4, Client #2, Client #1]
+sending
+[0, 1, 1, 0, 1]
+resp
+b'\x00\x00\x00\x00\x01\x00\x00\x00'
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+0
+resp
+b'\x00\x00\x00\x00\x01\x00\x00\x00'
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+0
+resp
+b'\x00\x00\x00\x00\x01\x00\x00\x00'
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+0
+resp
+b'\x03\x00\x00\x00\x00\x00\x00\x00'
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+3
+[2.010054588317871, 1.5937259197235107, 1.587961196899414, 0.9635297060012817, 0.87120521068573]
+[0.32, 0.32, 0.32, 0.32, 0.32]
+[Client #2, Client #4, Client #1]
+sending
+[0, 1, 1, 0, 1]
+resp
+b'\x00\x00\x00\x00\x01\x00\x00\x00'
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+0
+resp
+b'\x00\x00\x00\x00\x01\x00\x00\x00'
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+0
+resp
+b'\x00\x00\x00\x00\x01\x00\x00\x00'
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+0
+resp
+b'\x03\x00\x00\x00\x00\x00\x00\x00'
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+3
+[2.3923544883728027, 2.21931529045105, 1.1913580894470215, 0.9635297060012817, 0.87120521068573]
+[0.32, 0.32, 0.32, 0.32, 0.32]
+[Client #4, Client #1, Client #2]
+sending
+[0, 1, 1, 0, 1]
+resp
+b'\x00\x00\x00\x00\x01\x00\x00\x00'
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+0
+resp
+b'\x00\x00\x00\x00\x01\x00\x00\x00'
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+0
+resp
+b'\x00\x00\x00\x00\x01\x00\x00\x00'
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+0
+resp
+b'\x03\x00\x00\x00\x00\x00\x00\x00'
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+3
+Command ['/dcs/pg22/u2238887/Dissertation_FL/Simulations/ns3-fl/ns3-fl-network/build/scratch/wifi_exp/wifi_exp', '--NumClients=5', '--NetworkType=wifi', '--ModelSize=1600', '--TxGain=0', '--MaxPacketSize=256', '--LearningModel=async'] terminated with signal SIGKILL. Run it under a debugger to get more information (./waf --run <program> --gdb").

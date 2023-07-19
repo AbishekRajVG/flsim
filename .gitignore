@@ -112,7 +112,7 @@ data/
 .idea*
 .DS_Store
 *.pkl
-*.png
-*.csv
-*.csv_dropouts_
-*.txt
+#*.png
+#*.csv
+#*.csv_dropouts_
+#*.txt
